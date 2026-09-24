@@ -310,6 +310,12 @@
 <body>
 
 <svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+<!--
+  Some icon silhouettes below (folder, trash, search, gear, power, message,
+  computer) are based on Font Awesome Free (CC BY 4.0 — fontawesome.com),
+  recolored/adapted to this site's palette. Thanks to Font Awesome, and to
+  github.com/pollygon-dev/WIN98-template for pointing to it.
+-->
 <defs>
 
 <linearGradient id="gSilver" x1="0" y1="0" x2="0" y2="1">
@@ -334,18 +340,13 @@
   <stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#cfd6e0"/><stop offset="1" stop-color="#8f9bb3"/>
 </linearGradient>
 
-<symbol id="icon-computer" viewBox="0 0 32 32">
-  <rect x="4" y="4" width="24" height="18" rx="2" fill="url(#gSilver)" stroke="#000" stroke-width="1.2"/>
-  <rect x="7" y="7" width="18" height="12" rx="1" fill="url(#gBlueScreen)" stroke="#04204a" stroke-width="0.8"/>
-  <path d="M9 9 L17 9 L17 14 L9 14 Z" fill="#fff" opacity=".18"/>
-  <rect x="9" y="15.5" width="14" height="1.6" fill="#fff" opacity=".8"/>
-  <rect x="12" y="22" width="8" height="3" fill="url(#gSilver)" stroke="#000" stroke-width="1"/>
-  <rect x="7" y="25" width="18" height="3" rx="1" fill="url(#gSilver)" stroke="#000" stroke-width="1"/>
+<symbol id="icon-computer" viewBox="0 0 576 512">
+  <path d="M64 0C28.7 0 0 28.7 0 64L0 352c0 35.3 28.7 64 64 64l176 0-10.7 32L160 448c-17.7 0-32 14.3-32 32s14.3 32 32 32l256 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-69.3 0L336 416l176 0c35.3 0 64-28.7 64-64l0-288c0-35.3-28.7-64-64-64L64 0zM512 64l0 224L64 288 64 64l448 0z" fill="url(#gSilver)" stroke="#000" stroke-width="8"/>
+  <rect x="90" y="90" width="390" height="170" fill="url(#gBlueScreen)"/>
 </symbol>
 
-<symbol id="icon-folder" viewBox="0 0 24 24">
-  <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" fill="url(#gYellow)" stroke="#8a6400" stroke-width="1"/>
-  <path d="M2.5 9h19" stroke="#fff8dc" stroke-width="2" opacity=".7"/>
+<symbol id="icon-folder" viewBox="0 0 512 512">
+  <path d="M64 480H448c35.3 0 64-28.7 64-64V160c0-35.3-28.7-64-64-64H288c-10.1 0-19.6-4.7-25.6-12.8L243.2 57.6C231.1 41.5 212.1 32 192 32H64C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64z" fill="url(#gYellow)" stroke="#8a6400" stroke-width="8"/>
 </symbol>
 
 <symbol id="icon-notepad" viewBox="0 0 32 32">
@@ -365,14 +366,8 @@
   <path d="M22 24 A11 11 0 0 1 12 27" stroke="#ff8fd0" stroke-width="1.6" fill="none" opacity=".6"/>
 </symbol>
 
-<symbol id="icon-trash" viewBox="0 0 32 32">
-  <rect x="9" y="12" width="14" height="15" rx="1.5" fill="url(#gSilver)" stroke="#000" stroke-width="1.2"/>
-  <rect x="7" y="8" width="18" height="3" rx="1" fill="url(#gSilver)" stroke="#000" stroke-width="1"/>
-  <rect x="12" y="5" width="8" height="3" rx="1" fill="#a8a8a8" stroke="#000" stroke-width="1"/>
-  <rect x="12" y="14" width="2" height="10" fill="#707070"/>
-  <rect x="15" y="14" width="2" height="10" fill="#707070"/>
-  <rect x="18" y="14" width="2" height="10" fill="#707070"/>
-  <rect x="10.5" y="13.5" width="3" height="12" fill="#fff" opacity=".25"/>
+<symbol id="icon-trash" viewBox="0 0 448 512">
+  <path d="M135.2 17.7C140.6 6.8 151.7 0 163.8 0L284.2 0c12.1 0 23.2 6.8 28.6 17.7L320 32l96 0c17.7 0 32 14.3 32 32s-14.3 32-32 32L32 96C14.3 96 0 81.7 0 64S14.3 32 32 32l96 0 7.2-14.3zM32 128l384 0 0 320c0 35.3-28.7 64-64 64L96 512c-35.3 0-64-28.7-64-64l0-320zm96 64c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16zm96 0c-8.8 0-16 7.2-16 16l0 224c0 8.8 7.2 16 16 16s16-7.2 16-16l0-224c0-8.8-7.2-16-16-16z" fill="url(#gSilver)" stroke="#000" stroke-width="8"/>
 </symbol>
 
 <symbol id="icon-msn" viewBox="0 0 32 32">
@@ -436,21 +431,19 @@
   <rect x="9" y="23" width="14" height="1.6" fill="#3949ab"/>
 </symbol>
 
-<symbol id="icon-message" viewBox="0 0 24 24">
-  <path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719" fill="#ffffe1" stroke="#000" stroke-width="1" stroke-linejoin="round"/>
-  <circle cx="9" cy="12" r="1.1" fill="#000080"/>
-  <circle cx="13" cy="12" r="1.1" fill="#000080"/>
-  <circle cx="17" cy="12" r="1.1" fill="#000080"/>
+<symbol id="icon-message" viewBox="0 0 512 512">
+  <path d="M256 448c141.4 0 256-93.1 256-208S397.4 32 256 32S0 125.1 0 240c0 45.1 17.7 86.8 47.7 120.9c-1.9 24.5-11.4 46.3-21.4 62.9c-5.5 9.2-11.1 16.6-15.2 21.6c-2.1 2.5-3.7 4.4-4.9 5.7c-.6 .6-1 1.1-1.3 1.4l-.3 .3c-4.6 4.6-5.9 11.4-3.4 17.4c2.5 6 8.3 9.9 14.8 9.9c28.7 0 57.6-8.9 81.6-19.3c22.9-10 42.4-21.9 54.3-30.6c31.8 11.5 67 17.9 104.1 17.9z" fill="#ffffe1" stroke="#000" stroke-width="8"/>
+  <circle cx="128" cy="240" r="24" fill="#000080"/>
+  <circle cx="256" cy="240" r="24" fill="#000080"/>
+  <circle cx="384" cy="240" r="24" fill="#000080"/>
 </symbol>
 
-<symbol id="icon-search" viewBox="0 0 24 24">
-  <circle cx="11" cy="11" r="7" fill="#fff" stroke="#000" stroke-width="2"/>
-  <path d="m21 21-4.34-4.34" stroke="#808080" stroke-width="3" stroke-linecap="round"/>
+<symbol id="icon-search" viewBox="0 0 512 512">
+  <path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z" fill="#fff" stroke="#000" stroke-width="8"/>
 </symbol>
 
-<symbol id="icon-power" viewBox="0 0 32 32">
-  <circle cx="16" cy="18" r="10" fill="none" stroke="#000" stroke-width="3"/>
-  <rect x="14.5" y="4" width="3" height="12" fill="#ff0000" stroke="#000" stroke-width="1"/>
+<symbol id="icon-power" viewBox="0 0 512 512">
+  <path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 224c0 17.7 14.3 32 32 32s32-14.3 32-32l0-224zM143.5 120.6c13.6-11.3 15.4-31.5 4.1-45.1s-31.5-15.4-45.1-4.1C49.7 115.4 16 181.8 16 256c0 132.5 107.5 240 240 240s240-107.5 240-240c0-74.2-33.8-140.6-86.6-184.6c-13.6-11.3-33.8-9.4-45.1 4.1s-9.4 33.8 4.1 45.1c38.9 32.3 63.5 81 63.5 135.4c0 97.2-78.8 176-176 176s-176-78.8-176-176c0-54.4 24.7-103.1 63.5-135.4z" fill="#e04040" stroke="#000" stroke-width="8"/>
 </symbol>
 
 <symbol id="icon-disk" viewBox="0 0 32 32">
@@ -459,9 +452,8 @@
   <rect x="8" y="18" width="16" height="8" fill="#fff" stroke="#000" stroke-width="1"/>
 </symbol>
 
-<symbol id="icon-gear" viewBox="0 0 24 24">
-  <path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" fill="url(#gSilver)" stroke="#000" stroke-width="1" stroke-linejoin="round"/>
-  <circle cx="12" cy="12" r="3.4" fill="#6a6a7a" stroke="#000" stroke-width="0.8"/>
+<symbol id="icon-gear" viewBox="0 0 512 512">
+  <path d="M495.9 166.6c3.2 8.7 .5 18.4-6.4 24.6l-43.3 39.4c1.1 8.3 1.7 16.8 1.7 25.4s-.6 17.1-1.7 25.4l43.3 39.4c6.9 6.2 9.6 15.9 6.4 24.6c-4.4 11.9-9.7 23.3-15.8 34.3l-4.7 8.1c-6.6 11-14 21.4-22.1 31.2c-5.9 7.2-15.7 9.6-24.5 6.8l-55.7-17.7c-13.4 10.3-28.2 18.9-44 25.4l-12.5 57.1c-2 9.1-9 16.3-18.2 17.8c-13.8 2.3-28 3.5-42.5 3.5s-28.7-1.2-42.5-3.5c-9.2-1.5-16.2-8.7-18.2-17.8l-12.5-57.1c-15.8-6.5-30.6-15.1-44-25.4L83.1 425.9c-8.8 2.8-18.6 .3-24.5-6.8c-8.1-9.8-15.5-20.2-22.1-31.2l-4.7-8.1c-6.1-11-11.4-22.4-15.8-34.3c-3.2-8.7-.5-18.4 6.4-24.6l43.3-39.4C64.6 273.1 64 264.6 64 256s.6-17.1 1.7-25.4L22.4 191.2c-6.9-6.2-9.6-15.9-6.4-24.6c4.4-11.9 9.7-23.3 15.8-34.3l4.7-8.1c6.6-11 14-21.4 22.1-31.2c5.9-7.2 15.7-9.6 24.5-6.8l55.7 17.7c13.4-10.3 28.2-18.9 44-25.4l12.5-57.1c2-9.1 9-16.3 18.2-17.8C227.3 1.2 241.5 0 256 0s28.7 1.2 42.5 3.5c9.2 1.5 16.2 8.7 18.2 17.8l12.5 57.1c15.8 6.5 30.6 15.1 44 25.4l55.7-17.7c8.8-2.8 18.6-.3 24.5 6.8c8.1 9.8 15.5 20.2 22.1 31.2l4.7 8.1c6.1 11 11.4 22.4 15.8 34.3zM256 336a80 80 0 1 0 0-160 80 80 0 1 0 0 160z" fill="url(#gSilver)" stroke="#000" stroke-width="8"/>
 </symbol>
 
 <symbol id="icon-calculator" viewBox="0 0 32 32">
