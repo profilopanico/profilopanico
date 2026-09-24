@@ -134,7 +134,8 @@
   }
   .work-meta { font-size: 11px; color: #444; border-top: 1px solid #ccc; margin-top: 8px; padding-top: 6px; }
   .folder-grid { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 4px; }
-  .folder-icon { display: flex; flex-direction: column; align-items: center; width: 100px; text-align: center; padding: 8px 4px; cursor: default; }
+  .folder-icon { position: relative; display: flex; flex-direction: column; align-items: center; width: 100px; text-align: center; padding: 8px 4px; cursor: grab; touch-action: none; }
+  .folder-icon:active { cursor: grabbing; }
   .folder-icon .glyph { font-size: 32px; line-height: 1; filter: drop-shadow(1px 1px 1px rgba(0,0,0,.35)); }
   .win98-icon { width: 32px; height: 32px; display: block; image-rendering: pixelated; }
   .ephemeral-purple-icon { filter: hue-rotate(245deg) saturate(1.7) brightness(.9); }
@@ -530,10 +531,6 @@
     <div class="glyph"><img class="win98-icon" src="media/windows98-icons/computer-explorer.png" alt=""></div><div class="label">My Computer</div>
   </div>
 
-  <div class="icon" data-win="win-readme" style="left:20px; top:118px;">
-    <div class="glyph"><img class="win98-icon" src="media/windows98-icons/wordpad.png" alt=""></div><div class="label">README.txt</div>
-  </div>
-
   <div class="icon" data-win="win-profile" style="left:20px; top:218px;">
     <div class="glyph"><img class="win98-icon" src="media/windows98-icons/wordpad.png" alt=""></div><div class="label">profile.bio.txt</div>
   </div>
@@ -560,10 +557,6 @@
 
   <div class="icon" data-win="win-folder-fotografia" style="left:132px; top:242px;">
     <div class="glyph"><img class="win98-icon" src="media/windows98-icons/folder.png" alt=""></div><div class="label">Fotografia</div>
-  </div>
-
-  <div class="icon" data-win="win-mheall" style="left:132px; top:354px;">
-    <div class="glyph"><img class="win98-icon" src="media/windows98-icons/msn3-3.png" alt=""></div><div class="label">Mheall.ai.exe</div>
   </div>
 
   <div class="icon" data-win="win-ephemeral" style="left:244px; top:18px;">
@@ -1750,7 +1743,31 @@ Press any key, or click anywhere, to continue.
 
   // ---------- folder contents (double-click to open) ----------
   document.querySelectorAll(".folder-icon").forEach(function (fi) {
-    fi.addEventListener("dblclick", function () { openWindow(fi.dataset.win); });
+    var dragFolder = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
+    fi.addEventListener("pointerdown", function (e) {
+      dragFolder = false;
+      startX = e.clientX;
+      startY = e.clientY;
+      origLeft = parseFloat(fi.style.left) || 0;
+      origTop = parseFloat(fi.style.top) || 0;
+      fi.setPointerCapture(e.pointerId);
+    });
+    fi.addEventListener("pointermove", function (e) {
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+        dragFolder = true;
+        fi.style.left = (origLeft + dx) + "px";
+        fi.style.top = (origTop + dy) + "px";
+      }
+    });
+    fi.addEventListener("pointerup", function () { fi.dataset.dragged = dragFolder ? "true" : "false"; });
+    fi.addEventListener("dblclick", function () {
+      if (fi.dataset.dragged === "true") {
+        fi.dataset.dragged = "false";
+        return;
+      }
+      openWindow(fi.dataset.win);
+    });
   });
 
   // ---------- The Ephemeral Archive (arcade launcher) ----------
