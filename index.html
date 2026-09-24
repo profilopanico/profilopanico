@@ -225,6 +225,22 @@
   /* ---------- misc ---------- */
   a { color: #0000ee; }
   a:visited { color: #551a8b; }
+
+  /* ---------- film grain overlay ---------- */
+  #grain-overlay {
+    position: fixed; inset: 0; z-index: 99999; pointer-events: none;
+    opacity: .11;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    animation: grain-shift .5s steps(4) infinite;
+  }
+  @keyframes grain-shift {
+    0% { background-position: 0 0; }
+    25% { background-position: -37px 19px; }
+    50% { background-position: 21px -29px; }
+    75% { background-position: -18px 38px; }
+    100% { background-position: 0 0; }
+  }
 </style>
 </head>
 <body>
@@ -1025,6 +1041,7 @@ Just kidding. There's always a human behind the machine.<br>
 Press any key, or click anywhere, to continue.
 </div>
 
+<div id="grain-overlay"></div>
 
 <script>
 (function () {
