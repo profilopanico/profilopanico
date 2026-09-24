@@ -137,6 +137,17 @@
   .folder-icon { display: flex; flex-direction: column; align-items: center; width: 100px; text-align: center; padding: 8px 4px; cursor: default; }
   .folder-icon .glyph { font-size: 32px; line-height: 1; filter: drop-shadow(1px 1px 1px rgba(0,0,0,.35)); }
   .win98-icon { width: 32px; height: 32px; display: block; image-rendering: pixelated; }
+  .ephemeral-icon { position: relative; width: 32px; height: 32px; display: block; }
+  .ephemeral-icon .win98-icon { filter: hue-rotate(245deg) saturate(1.7) brightness(.9); }
+  .pixel-eye {
+    position: absolute; left: 5px; top: 13px; width: 22px; height: 9px;
+    background: #fff; border: 2px solid #111; box-sizing: border-box;
+    clip-path: polygon(0 30%, 18% 30%, 18% 0, 82% 0, 82% 30%, 100% 30%, 100% 70%, 82% 70%, 82% 100%, 18% 100%, 18% 70%, 0 70%);
+  }
+  .pixel-eye::after {
+    content: ""; position: absolute; left: 7px; top: 1px; width: 5px; height: 5px;
+    background: #32105f; box-shadow: 3px 3px #32105f;
+  }
   .folder-icon .label { font-size: 11px; margin-top: 5px; line-height: 1.25; word-break: break-word; }
   .folder-icon:hover { background: var(--accent); color: #fff; }
   .btn98 {
@@ -538,7 +549,7 @@
   </div>
 
   <div class="icon" data-win="win-ephemeral" style="left:244px; top:18px;">
-    <div class="glyph"><img class="win98-icon" src="media/windows98-icons/computer-explorer.png" alt=""></div><div class="label">TheEphemeralArchive.exe</div>
+    <div class="glyph"><span class="ephemeral-icon"><img class="win98-icon" src="media/windows98-icons/folder.png" alt=""><span class="pixel-eye" aria-hidden="true"></span></span></div><div class="label">TheEphemeralArchive.exe</div>
   </div>
 
   <div class="icon" data-win="win-folder-drammaturgia" style="left:244px; top:130px;">
