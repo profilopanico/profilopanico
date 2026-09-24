@@ -1118,7 +1118,7 @@ github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="
 
 
   <!-- ============ WINDOW: Patch Notes ============ -->
-  <div class="window" id="win-patchnotes" data-x="0.32" data-y="0.07" style="width:480px; height:420px;">
+  <div class="window" id="win-patchnotes" data-x="0.28" data-y="0.05" style="width:560px; height:520px;">
     <div class="title-bar">
       <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-patch"></use></svg></span><span>Patch Notes.txt</span></div>
       <div class="title-bar-controls">
@@ -1132,21 +1132,79 @@ github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="
       <div class="menu-item">Edit<div class="dropdown"><div>Copy</div><div>Paste</div></div></div>
       <div class="menu-item">Help<div class="dropdown"><div data-menu-action="about">About</div></div></div>
     </div>
-    <div class="window-body notepad-body">PATCH NOTES
-===========
+    <div class="window-body app-body">
+      <h3 style="margin:0 0 4px;">PATCH NOTES</h3>
+      <p style="font-size:11px; color:#555; margin:0 0 14px;">Project documentation, disguised as update history — because on this machine, even the paperwork has to look like part of the system.</p>
 
-Project documentation, disguised as update history — because on
-this machine, everything (even the paperwork) has to look like
-part of the system.
+      <div class="bevel-in" style="padding:6px 8px; font-family:'Courier New',monospace; font-size:12px; background:#fff; margin-bottom:16px;">
+        <b>v1.0 — 2026-09-24</b><br>profilopanico goes live.
+      </div>
 
-v1.0 — 2026-09-24
-------------------
-- profilopanico goes live.
+      <div class="bevel-in" style="padding:10px 12px; background:#fff;">
+        <b style="font-family:'Courier New',monospace;">v1.1 — Mheall.ai — fascicolo di presentazione</b>
+        <div style="font-size:11px; color:#777; margin:2px 0 10px;">Net Art 1, Prof. Domenico Quaranta — Accademia di Belle Arti di Brera — Cristian De Canio</div>
 
-------------------------------------------------------------
-[This is where the real project documentation goes — concept,
-process, references, the full dossier/fascicolo. Send it over
-and it gets formatted in here as version entries.]</div>
+        <img src="media/mheall/sticker.png" alt="Mheall.ai sticker with QR code" style="width:220px; display:block; margin:0 auto 14px; border:1px solid #808080;">
+
+        <h4 style="margin:10px 0 4px;">Introduzione</h4>
+        <p>Mheall.ai è un sito che si presenta come un assistente conversazionale basato sull'intelligenza artificiale. Ha l'aspetto, il linguaggio e le funzioni di un prodotto come ChatGPT o Claude: una barra laterale con l'elenco delle conversazioni, un pulsante per aprirne una nuova, un campo di testo, un disclaimer sotto la chat, le risposte formattate in markdown.</p>
+        <p>In realtà dietro ogni risposta non c'è nessun modello linguistico. Le risposte le scrive una persona, in tempo reale, da un pannello di controllo nascosto che solo chi conosce l'indirizzo può raggiungere. Il visitatore non lo sa. Può scoprirlo da solo durante la conversazione, oppure può venirlo a sapere leggendo questo fascicolo, distribuito insieme a un adesivo con un QR code che rimanda al sito.</p>
+        <p>Il progetto nasce dentro il tema monografico del corso, la riflessione critica sull'influenza della tecnologia, e prova a metterlo in pratica invece di limitarsi a spiegarlo. Non racconta la critica anti-tecnologica: la fa vivere a chi usa l'interfaccia.</p>
+
+        <h4 style="margin:14px 0 4px;">Il concept</h4>
+        <p>Il sito è pensato per imitare fino in fondo un prodotto AI vero. Ha un pallino verde che segnala "online", dei suggerimenti di conversazione, la possibilità di rinominare, archiviare ed eliminare le chat, le notifiche del browser. Sotto il campo di scrittura c'è un disclaimer che cambia nel tempo: a volte compare una frase generica del tipo "può commettere errori, verifica le informazioni importanti", identica nel tono a quella di qualsiasi chatbot commerciale. Altre volte, a intervalli casuali, compaiono invece frasi più scomode: citazioni su sorveglianza di massa, raccolta dati, passaggi del manifesto di Theodore Kaczynski.</p>
+        <p>Dall'altra parte c'è un pannello di amministrazione che replica fedelmente l'interfaccia di un prodotto come Claude: la stessa struttura a barra laterale, le stesse chat raggruppate per visitatore, le stesse funzioni di rinomina e archiviazione. È il gemello nascosto del sito pubblico. L'unica differenza è che al posto di un modello linguistico c'è una persona che scrive un messaggio alla volta, aiutata da alcune risposte rapide preimpostate che può decidere di inviare o modificare.</p>
+        <p>Il sito è completamente gratuito e ospitato su infrastrutture pubbliche gratuite, e non chiede nessuna registrazione. È una scelta dichiarata fin dalla prima riga sotto il campo di scrittura, "Nessuna registrazione. Nessun dato raccolto. Solo una conversazione", che questo fascicolo permette di leggere in controluce.</p>
+
+        <h4 style="margin:14px 0 4px;">Riflessione anti-tecnologica</h4>
+        <p>Il tema monografico del corso, criticare l'influenza della tecnologia sulla vita, la cultura, la socialità, l'economia e la politica, proponendo prospettive di rifiuto, ribellione e fuga, è il cuore del progetto. Kaczynski sostiene che il sistema tecnologico abbia una propria agency, che proceda da sé togliendo all'uomo la libertà autentica. Crary porta questa critica al presente: gli schermi non mostrano più simboli da interpretare ma segnali a cui reagire in automatico. Fisher chiude il ragionamento con l'idea che sia più facile immaginare la fine del mondo che la fine del capitalismo.</p>
+        <p>Mheall.ai non spiega questi autori in un testo, li fa emergere dentro l'interfaccia stessa. I disclaimer citano letteralmente Kaczynski, Snowden, la NSA, mescolati a frasi rassicuranti da chatbot. In questo progetto il rifiuto e la ribellione si agiscono dentro lo strumento che si vorrebbe criticare.</p>
+        <p style="font-style:italic; border-left:3px solid var(--win-face-dark); padding-left:10px;">«È più facile immaginare la fine del mondo che la fine del capitalismo.»<br>— Mark Fisher</p>
+
+        <h4 style="margin:14px 0 4px;">Il lavoro umano dietro la macchina</h4>
+        <p>Il progetto rovescia il test di Turing: non c'è nessuna intelligenza artificiale a rispondere, c'è una persona che la imita in tempo reale. È lo stesso meccanismo che regge piattaforme come Fiverr o Amazon Mechanical Turk, dove un lavoro invisibile e sottopagato si nasconde dietro un'interfaccia che sembra automatica. Qui invece quel lavoro è esplicito, ed è al centro dell'opera invece che nascosto in fondo alla filiera.</p>
+        <p>Mentre il dibattito pubblico teme che l'intelligenza artificiale sostituisca il lavoro umano, Mheall.ai mostra il percorso opposto: una persona che impersona una macchina, e dimostra quanto sia facile oggi scambiare l'una per l'altra.</p>
+        <p style="font-style:italic; border-left:3px solid var(--win-face-dark); padding-left:10px;">«Le intelligenze artificiali non creano: imitano statisticamente.»<br>— da <i>Everything Is a Remix</i>, Kirby Ferguson</p>
+
+        <h4 style="margin:14px 0 4px;">Identità, inganno, mitopoiesi</h4>
+        <p>Mheall.ai è un'entità che non esiste, costruita apposta per essere creduta: il nome, il pallino verde "online", il linguaggio da assistente AI. È la stessa logica che ha attraversato la net art fin dagli anni Novanta. Luther Blissett era un nome multiplo che chiunque poteva usare per confondere i media. Darko Maver era l'artista serbo inesistente costruito da Eva e Franco Mattes, portato fino alla Biennale di Venezia del 2001.</p>
+        <p>In tutti questi casi il senso dell'opera non sta nell'inganno in sé, ma nella reazione di chi ci casca. E sta anche nella scelta, altrettanto critica, di rivelarlo oppure no. Luther Blissett rivelava sempre la beffa, come gesto politico. La disinformazione di oggi quasi mai. Mheall.ai si colloca dalla parte della rivelazione: l'adesivo con il QR code e questo stesso fascicolo sono il momento in cui l'opera smette di ingannare e comincia a spiegarsi.</p>
+
+        <h4 style="margin:14px 0 4px;">Sorveglianza e dati</h4>
+        <p>Mentre i suoi disclaimer denunciano la sorveglianza digitale, il sito raccoglie normalmente i dati di chi scrive. Ogni conversazione resta salvata in un database, insieme a un identificativo del visitatore. Non è una svista, è il punto più scoperto del progetto. Eva e Franco Mattes, con <i>Life Sharing</i>, nel 2000 misero online l'intero contenuto del proprio computer, sostenendo che "la privacy è stupida". Allo stesso modo, Mheall.ai non descrive la sorveglianza dall'esterno: la mette in pratica su chi lo usa.</p>
+        <p style="font-style:italic; border-left:3px solid var(--win-face-dark); padding-left:10px;">«Se il ritratto è accurato è orwelliano, se non lo è è kafkiano.»<br>— Eva &amp; Franco Mattes, <i>My Little Big Data</i></p>
+
+        <h4 style="margin:14px 0 4px;">Dirottamento del pubblico</h4>
+        <p>Il lavoro non abita una galleria, ma un indirizzo pubblico, diffuso con un adesivo e un QR code applicato negli spazi dell'Accademia. È una scelta di piattaforma coerente con una parte della storia della net art, da Alexei Shulgin a Petra Cortright fino al Toywar di etoy, che ha sempre preferito intercettare pubblici che non cercano arte, dirottando la loro attenzione verso qualcosa di diverso da quello che si aspettano.</p>
+        <p>Nel 2026 l'aspettativa più diffusa, davanti a una chat con intelligenza artificiale, è aprirla, chiedere aiuto e ricevere una risposta utile. Mheall.ai intercetta esattamente questa aspettativa per consegnare, al suo posto, un'esperienza che mette in discussione la fiducia riposta nello strumento stesso.</p>
+
+        <h4 style="margin:14px 0 4px;">Copia, appropriazione, remix</h4>
+        <p>L'interfaccia di Mheall.ai copia deliberatamente quella di prodotti come ChatGPT e Claude: la barra laterale, i suggerimenti di conversazione, il disclaimer sotto il campo di testo. È un gesto di appropriazione diretta, nella tradizione di una net art che ha sempre trattato il web come un territorio senza originali da rispettare.</p>
+        <p>C'è anche un cortocircuito più profondo. Un'intelligenza artificiale, per definizione, non ha un originale: è essa stessa una copia statistica di milioni di conversazioni umane. Mheall.ai smaschera questo vuoto, perché l'unico elemento davvero originale, in tutta l'esperienza, resta la persona nascosta dietro lo schermo.</p>
+
+        <h4 style="margin:14px 0 4px;">Il mezzo come luogo, non come strumento</h4>
+        <p>Mheall.ai non è un video o un'immagine che parla del web: è il sito stesso, con la sua infrastruttura autonoma. Pagina pubblica, database in tempo reale, pannello di controllo, notifiche su un bot di messaggistica, applicazione installabile su smartphone. L'opera esiste solo finché quell'infrastruttura funziona, ed è coerente con un'idea di net art in cui la rete non è lo strumento con cui si realizza il lavoro, ma il luogo dove il lavoro vive.</p>
+        <p>A questo si aggiunge un livello in più, che rivendico apertamente: alcuni strumenti di intelligenza artificiale sono stati usati per costruire questo stesso finto assistente di intelligenza artificiale. Il mezzo non è neutro, e il progetto lo dimostra restando dentro il mezzo invece di parlarne da fuori.</p>
+
+        <h4 style="margin:14px 0 4px;">Aspetti tecnici</h4>
+        <p>Il sito è pubblico e gratuito, ospitato su GitHub Pages. Le conversazioni vengono salvate su un database in tempo reale (Firebase), che alimenta sia il sito visibile ai visitatori sia il pannello di amministrazione riservato. Ogni nuovo messaggio genera una notifica su un canale di messaggistica privato, da cui è anche possibile rispondere. Il pannello di amministrazione è installabile come applicazione (PWA) su smartphone, per poter rispondere da qualunque luogo. Il progetto viene distribuito con adesivi che contengono un QR code.</p>
+
+        <h4 style="margin:14px 0 4px;">Materiali</h4>
+        <p>Il progetto è distribuito negli spazi dell'Accademia tramite un adesivo con QR code, nello stesso stile visivo del sito: sfondo scuro, verde come colore d'accento, font monospazio per richiamare l'interfaccia di un terminale. QR code funzionante, rimanda a tinyurl.com/mheall-ai.</p>
+
+        <h4 style="margin:14px 0 4px;">Bibliografia</h4>
+        <p style="font-size:11px; line-height:1.6;">
+          Domenico Quaranta, <i>Net Art. Scritti sull'arte nell'era dell'informazione</i>, Postmedia Books, 2023.<br>
+          Theodore J. Kaczynski, <i>Il manifesto di Unabomber. La società industriale e il suo futuro</i>, Passaggio al Bosco, 2022.<br>
+          Jonathan Crary, <i>Terra bruciata. Oltre l'era digitale verso un mondo postcapitalista</i>, Meltemi, 2023.<br>
+          Andrea Cremonesi, Elena D'Alonzo, Domenico Quaranta (a cura di), <i>La complessità dell'arte, l'arte della complessità</i>, Krisis, 2025 (estratti).
+        </p>
+
+        <p style="font-style:italic; border-left:3px solid var(--accent); padding-left:10px; margin-top:16px;">«Mheall.ai non parla di tecnologia: la fa provare. Dietro ogni interfaccia che ci promette di aiutarci c'è un sistema che estrae. E a volte, dietro la macchina, c'è semplicemente qualcuno che ci guarda.»</p>
+      </div>
+
+      <p style="font-size:11px; color:#888; margin-top:14px;">[Altre voci/fascicoli vanno aggiunti qui come nuove versioni.]</p>
+    </div>
   </div>
 
 
