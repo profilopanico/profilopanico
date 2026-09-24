@@ -1673,29 +1673,24 @@ Press any key, or click anywhere, to continue.
     document.querySelectorAll(".menu-item.open").forEach(function (m) { m.classList.remove("open"); });
   }
 
-  // ---------- window dragging ----------
+  // ---------- free window dragging ----------
   (function () {
     var dragEl = null, offX = 0, offY = 0;
     document.addEventListener("pointerdown", function (e) {
-      var tb = e.target.closest(".title-bar");
-      if (!tb) return;
-      if (e.target.closest(".tb-btn")) return;
-      var win = tb.closest(".window");
+      var win = e.target.closest(".window");
+      if (!win || e.target.closest("button, a, input, select, textarea, .menu-item, .folder-icon")) return;
       if (win.dataset.maxed === "true") return;
       dragEl = win;
       var r = win.getBoundingClientRect();
       offX = e.clientX - r.left;
       offY = e.clientY - r.top;
-      tb.setPointerCapture(e.pointerId);
+      e.target.setPointerCapture(e.pointerId);
     });
     document.addEventListener("pointermove", function (e) {
       if (!dragEl) return;
       var dr = desktop.getBoundingClientRect();
-      var w = dragEl.offsetWidth, h = dragEl.offsetHeight;
       var left = e.clientX - offX - dr.left;
       var top = e.clientY - offY - dr.top;
-      left = Math.max(-w + 60, Math.min(left, dr.width - 60));
-      top = Math.max(0, Math.min(top, dr.height - 24));
       dragEl.style.left = left + "px";
       dragEl.style.top = top + "px";
     });
