@@ -1737,6 +1737,9 @@ Press any key, or click anywhere, to continue.
 
   // ---------- folder contents (double-click to open) ----------
   document.querySelectorAll(".folder-icon").forEach(function (fi) {
+    fi.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+    fi.addEventListener("pointermove", function (e) { e.stopPropagation(); });
+    fi.addEventListener("pointerup", function (e) { e.stopPropagation(); });
     fi.addEventListener("dblclick", function () {
       openWindow(fi.dataset.win);
     });
