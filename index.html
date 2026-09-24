@@ -101,6 +101,17 @@
   .menu-item.open .dropdown { display: block; }
   .dropdown div { padding: 4px 18px; white-space: nowrap; }
   .address-bar { flex: 0 0 auto; display: flex; align-items: center; gap: 6px; padding: 3px 6px; background: var(--win-face); border-bottom: 1px solid var(--win-face-dark); font-size: 11px; }
+  .welcome-body { flex: 1; display: flex; overflow: hidden; }
+  .welcome-side { width: 140px; flex: 0 0 auto; background: var(--win-face); border-right: 1px solid var(--win-face-dark); padding: 10px 0; overflow: auto; }
+  .welcome-side h4 { margin: 0 0 8px; padding: 0 10px; font-size: 11px; letter-spacing: 1px; }
+  .welcome-tab { padding: 6px 10px; cursor: pointer; border-left: 3px solid transparent; font-size: 12px; }
+  .welcome-tab:hover { background: rgba(255,255,255,.4); }
+  .welcome-tab.active { border-left-color: #e07820; background: #fff; font-weight: bold; }
+  .welcome-panels { flex: 1; padding: 14px 16px; overflow: auto; background: #fff; -webkit-user-select: text; user-select: text; }
+  .welcome-panel { display: none; }
+  .welcome-panel.active { display: block; }
+  .welcome-panel h3 { margin-top: 0; }
+  .welcome-panel p { line-height: 1.5; }
   .address-bar svg { width: 15px; height: 15px; display: block; flex: 0 0 auto; }
   .address-bar .addr-field {
     flex: 1; background: #fff; border-top: 1px solid var(--win-face-dark); border-left: 1px solid var(--win-face-dark);
@@ -525,6 +536,60 @@ human_operator.exe .... always on</div>
       </div>
     </div>
     <div class="status-bar"><span>profilopanico (C:)</span><span>1 object(s) selected</span></div>
+  </div>
+
+
+  <!-- ============ WINDOW: Welcome ============ -->
+  <div class="window" id="win-welcome" data-x="0.26" data-y="0.07" style="width:560px; height:420px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-message"></use></svg></span><span>Welcome</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="welcome-body">
+      <div class="welcome-side">
+        <h4>CONTENTS</h4>
+        <div class="welcome-tab active" data-tab="explore">Explore</div>
+        <div class="welcome-tab" data-tab="contact">Contact</div>
+        <div class="welcome-tab" data-tab="fun">Have Fun</div>
+        <div class="welcome-tab" data-tab="thanks">Thank You</div>
+      </div>
+      <div class="welcome-panels">
+        <div class="welcome-panel active" data-panel="explore">
+          <h3>Welcome to profilopanico</h3>
+          <p>This desktop is the artwork — built for Net Art 1, Prof. Domenico Quaranta,
+          Accademia di Belle Arti di Brera.</p>
+          <p>Double-click any icon to open it. The course folders (Net Art 1, Progettazione
+          Multimediale, Fotografia, Drammaturgia Multimediale) hold the actual coursework.
+          TheEphemeralArchive.exe is a playable piece — try it.</p>
+          <p>Click <b>Start</b> in the bottom-left corner any time for the full list of
+          what's on this machine.</p>
+        </div>
+        <div class="welcome-panel" data-panel="contact">
+          <h3>Contact</h3>
+          <p>email — <a href="mailto:acdecanio@gmail.com">acdecanio@gmail.com</a><br>
+          instagram — <a href="https://instagram.com/profilo.panico" target="_blank" rel="noopener">@profilo.panico</a><br>
+          github — <a href="https://github.com/profilo.panico" target="_blank" rel="noopener">github.com/profilo.panico</a></p>
+        </div>
+        <div class="welcome-panel" data-panel="fun">
+          <h3>Have Fun</h3>
+          <p>This machine has a few things it doesn't advertise.</p>
+          <p>Keep an eye on the system tray. Leave the desktop idle for a while and see
+          what happens. Not every folder wants to open. And if you happen to know an old
+          cheat code, try typing it.</p>
+        </div>
+        <div class="welcome-panel" data-panel="thanks">
+          <h3>Thank You</h3>
+          <p>Thanks for stopping by and poking around. Nothing here is precious — it's a
+          machine, and machines are meant to be used.</p>
+          <p>— Cristian</p>
+        </div>
+      </div>
+    </div>
+    <div class="status-bar" style="justify-content:flex-end;">
+      <span class="btn98" data-action="close" data-win="win-welcome">Close</span>
+    </div>
   </div>
 
 
@@ -1127,6 +1192,7 @@ Thanks for looking closely.</div>
 <div id="start-menu">
   <div class="sm-side"><span>profilopanico 98</span></div>
   <div class="sm-items">
+    <div class="sm-item" data-win="win-welcome"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-message"></use></svg></span>Welcome</div>
     <div class="sm-item" data-win="win-mycomputer"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-computer"></use></svg></span>My Computer</div>
     <div class="sm-item" data-win="win-readme"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span>README.txt</div>
     <div class="sm-item" data-win="win-profile"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span>profile.bio.txt</div>
@@ -1630,8 +1696,18 @@ Press any key, or click anywhere, to continue.
     }
   });
 
-  // ---------- open README by default, like a real freshly-booted desktop ----------
-  setTimeout(function () { openWindow("win-readme"); }, 400);
+  // ---------- welcome tabs ----------
+  document.querySelectorAll(".welcome-tab").forEach(function (tab) {
+    tab.addEventListener("click", function () {
+      document.querySelectorAll(".welcome-tab").forEach(function (t) { t.classList.remove("active"); });
+      document.querySelectorAll(".welcome-panel").forEach(function (p) { p.classList.remove("active"); });
+      tab.classList.add("active");
+      document.querySelector('.welcome-panel[data-panel="' + tab.dataset.tab + '"]').classList.add("active");
+    });
+  });
+
+  // ---------- open Welcome by default, like a real freshly-booted desktop ----------
+  setTimeout(function () { openWindow("win-welcome"); }, 400);
 
 })();
 </script>
