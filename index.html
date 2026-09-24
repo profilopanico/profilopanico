@@ -202,7 +202,7 @@
     align-items: center; justify-content: center; overflow: hidden; cursor: pointer;
   }
   #screensaver.on { display: flex; }
-  #screensaver-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #screensaver-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 
   /* ---------- bsod ---------- */
   #bsod {
@@ -973,7 +973,7 @@ Thanks for looking closely.</div>
 
 <!-- ============ SCREENSAVER ============ -->
 <div id="screensaver">
-  <canvas id="screensaver-canvas"></canvas>
+  <video id="screensaver-video" src="media/screensaver/pipes.mp4" muted loop playsinline preload="auto"></video>
 </div>
 
 <!-- ============ BSOD ============ -->
@@ -1401,91 +1401,19 @@ Press any key, or click anywhere, to continue.
     openWindow("win-sysmsg");
   });
 
-  // ---------- idle screensaver (3D Pipes, canvas recreation) ----------
+  // ---------- idle screensaver (Windows 98 Pipes video, local file) ----------
   var idleTimer = null;
   var screensaver = document.getElementById("screensaver");
-  var ssCanvas = document.getElementById("screensaver-canvas");
-  var ssCtx = ssCanvas.getContext("2d");
-  var ssRAF = null;
-  var ssPipes = [];
-  var ssCell = 16;
-  var ssCols = 0, ssRows = 0;
-  var ssColors = ["#ff3b3b","#3bff5e","#3b8fff","#ffe93b","#ff3bd8","#3bffe9","#ff8a3b","#a13bff"];
-  var ssDirs = [[1,0],[-1,0],[0,1],[0,-1]];
-
-  function ssResize() {
-    ssCanvas.width = screensaver.clientWidth;
-    ssCanvas.height = screensaver.clientHeight;
-    ssCols = Math.max(4, Math.floor(ssCanvas.width / ssCell));
-    ssRows = Math.max(4, Math.floor(ssCanvas.height / ssCell));
-    ssCtx.fillStyle = "#000";
-    ssCtx.fillRect(0, 0, ssCanvas.width, ssCanvas.height);
-  }
-
-  function ssNewPipe() {
-    return {
-      x: Math.floor(Math.random() * ssCols),
-      y: Math.floor(Math.random() * ssRows),
-      dir: ssDirs[Math.floor(Math.random() * ssDirs.length)],
-      color: ssColors[Math.floor(Math.random() * ssColors.length)],
-      steps: 0,
-      maxSteps: 30 + Math.floor(Math.random() * 60)
-    };
-  }
-
-  function ssCellCenter(gx, gy) {
-    return [gx * ssCell + ssCell / 2, gy * ssCell + ssCell / 2];
-  }
-
-  function ssRespawn(p) {
-    var np = ssNewPipe();
-    p.x = np.x; p.y = np.y; p.dir = np.dir; p.color = np.color; p.steps = 0; p.maxSteps = np.maxSteps;
-  }
-
-  var ssTickCount = 0;
-  function ssTick() {
-    ssTickCount++;
-    if (ssTickCount % 900 === 0) {
-      ssCtx.fillStyle = "rgba(0,0,0,0.97)";
-      ssCtx.fillRect(0, 0, ssCanvas.width, ssCanvas.height);
-    }
-    ssPipes.forEach(function (p) {
-      if (Math.random() < 0.16) {
-        var options = ssDirs.filter(function (d) { return !(d[0] === -p.dir[0] && d[1] === -p.dir[1]); });
-        p.dir = options[Math.floor(Math.random() * options.length)];
-      }
-      var nx = p.x + p.dir[0], ny = p.y + p.dir[1];
-      if (nx < 0 || nx >= ssCols || ny < 0 || ny >= ssRows || p.steps > p.maxSteps) {
-        ssRespawn(p);
-        return;
-      }
-      var from = ssCellCenter(p.x, p.y);
-      var to = ssCellCenter(nx, ny);
-      ssCtx.lineCap = "round";
-      ssCtx.strokeStyle = p.color;
-      ssCtx.lineWidth = ssCell * 0.6;
-      ssCtx.beginPath(); ssCtx.moveTo(from[0], from[1]); ssCtx.lineTo(to[0], to[1]); ssCtx.stroke();
-      ssCtx.strokeStyle = "rgba(255,255,255,0.35)";
-      ssCtx.lineWidth = ssCell * 0.2;
-      var ox = p.dir[1] * ssCell * 0.12, oy = -p.dir[0] * ssCell * 0.12;
-      ssCtx.beginPath(); ssCtx.moveTo(from[0] + ox, from[1] + oy); ssCtx.lineTo(to[0] + ox, to[1] + oy); ssCtx.stroke();
-      p.x = nx; p.y = ny; p.steps++;
-    });
-    ssRAF = requestAnimationFrame(ssTick);
-  }
+  var ssVideo = document.getElementById("screensaver-video");
 
   function showScreensaver() {
     screensaver.classList.add("on");
-    ssResize();
-    ssPipes = [];
-    for (var i = 0; i < 7; i++) ssPipes.push(ssNewPipe());
-    ssTickCount = 0;
-    cancelAnimationFrame(ssRAF);
-    ssRAF = requestAnimationFrame(ssTick);
+    ssVideo.currentTime = 0;
+    ssVideo.play().catch(function () {});
   }
   function hideScreensaver() {
     screensaver.classList.remove("on");
-    cancelAnimationFrame(ssRAF);
+    ssVideo.pause();
   }
   function resetIdle() {
     hideScreensaver();
@@ -1495,7 +1423,6 @@ Press any key, or click anywhere, to continue.
   ["mousemove", "mousedown", "keydown", "touchstart", "pointermove"].forEach(function (evt) {
     document.addEventListener(evt, resetIdle, { passive: true });
   });
-  window.addEventListener("resize", function () { if (screensaver.classList.contains("on")) ssResize(); });
   resetIdle();
 
   // ---------- konami code easter egg ----------
