@@ -121,8 +121,10 @@
   .dropdown div:hover { background: var(--accent); color: #fff; }
   .window-body { flex: 1 1 auto; overflow: auto; background: #fff; }
   .notepad-body {
-    padding: 8px 10px; font-family: "Courier New", monospace; font-size: 12.5px; line-height: 1.5;
-    white-space: pre-wrap; -webkit-user-select: text; user-select: text;
+    padding: 8px 10px; font-family: "Fixedsys", "Courier New", monospace; font-size: 12px; line-height: 1.35;
+    white-space: pre-wrap; background: #fff; border: 1px solid var(--win-face-dark);
+    box-shadow: inset 1px 1px 0 var(--win-face-shadow2);
+    -webkit-user-select: text; user-select: text;
   }
   .app-body { padding: 10px; -webkit-user-select: text; user-select: text; }
   .status-bar { flex: 0 0 auto; display: flex; justify-content: space-between; padding: 2px 6px; font-size: 11px; background: var(--win-face); border-top: 1px solid var(--win-face-dark); box-shadow: inset 0 1px 0 #fff; }
@@ -237,6 +239,7 @@
   .sm-item { display: flex; align-items: center; gap: 9px; padding: 5px 8px; cursor: pointer; }
   .sm-item:hover { background: var(--accent); color: #fff; }
   .sm-item .g { font-size: 16px; width: 20px; text-align: center; }
+  .sm-item .win98-menu-icon { width: 16px; height: 16px; display: block; image-rendering: pixelated; }
   .sm-sep { height: 1px; background: var(--win-face-dark); box-shadow: 0 1px 0 #fff; margin: 4px 6px; }
 
   /* ---------- balloon ---------- */
@@ -613,7 +616,7 @@
             <div>A:\<br>(empty)</div>
           </div>
           <div style="text-align:center; width:80px; cursor:pointer;" id="properties-open">
-            <div><svg viewBox="0 0 32 32" style="width:30px; height:30px;"><use href="#icon-gear"></use></svg></div>
+            <div><img class="win98-icon" src="media/windows98-icons/gear.png" alt=""></div>
             <div>Properties</div>
           </div>
         </div>
@@ -1434,26 +1437,27 @@ Respect.</div>
 <div id="start-menu">
   <div class="sm-side"><span>profilopanico 98</span></div>
   <div class="sm-items">
-    <div class="sm-item" data-win="win-welcome"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-message"></use></svg></span>Welcome</div>
-    <div class="sm-item" data-win="win-mycomputer"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-computer"></use></svg></span>My Computer</div>
-    <div class="sm-item" data-win="win-readme"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span>README.txt</div>
-    <div class="sm-item" data-win="win-profile"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span>profile.bio.txt</div>
-    <div class="sm-item" data-win="win-homecasa-error"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span>HOME_CASA</div>
+    <div class="sm-item" data-win="win-welcome"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/wordpad.png" alt=""></span>Welcome</div>
+    <div class="sm-item" data-win="win-mycomputer"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/computer-explorer.png" alt=""></span>My Computer</div>
+    <div class="sm-item" data-win="win-readme"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/wordpad.png" alt=""></span>README.txt</div>
+    <div class="sm-item" data-win="win-profile"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/wordpad.png" alt=""></span>profile.bio.txt</div>
+    <div class="sm-item" data-win="win-homecasa-error"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/folder.png" alt=""></span>HOME_CASA</div>
     <div class="sm-sep"></div>
-    <div class="sm-item" data-win="win-exam-project"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span>Progetto esame Net Art 1</div>
-    <div class="sm-item" data-win="win-folder-netart"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span>Net Art 1</div>
-    <div class="sm-item" data-win="win-folder-multimedia"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span>Progettazione Multimediale</div>
-    <div class="sm-item" data-win="win-folder-fotografia"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span>Fotografia</div>
-    <div class="sm-item" data-win="win-folder-drammaturgia"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span>Drammaturgia Multimediale</div>
-    <div class="sm-item" data-win="win-ephemeral"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-eye-folder"></use></svg></span>TheEphemeralArchive.exe</div>
-    <div class="sm-item" data-win="win-mheall"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-robot"></use></svg></span>Mheall.ai</div>
+    <div class="sm-item" data-win="win-exam-project"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/folder.png" alt=""></span>Progetto esame Net Art 1</div>
+    <div class="sm-item" data-win="win-folder-netart"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/folder.png" alt=""></span>Net Art 1</div>
+    <div class="sm-item" data-win="win-folder-multimedia"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/folder.png" alt=""></span>Progettazione Multimediale</div>
+    <div class="sm-item" data-win="win-folder-fotografia"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/folder.png" alt=""></span>Fotografia</div>
+    <div class="sm-item" data-win="win-folder-drammaturgia"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/folder.png" alt=""></span>Drammaturgia Multimediale</div>
+    <div class="sm-item" data-win="win-ephemeral"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/erase-file-1.png" alt=""></span>TheEphemeralArchive.exe</div>
+    <div class="sm-item" data-win="win-mheall"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/msn3-3.png" alt=""></span>Mheall.ai</div>
     <div class="sm-sep"></div>
-    <div class="sm-item" data-win="win-cdburner"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-cd"></use></svg></span>CD Burner</div>
-    <div class="sm-item" data-win="win-patchnotes"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span>README.txt</div>
-    <div class="sm-item" data-win="win-accademia"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-photo"></use></svg></span>Accademia di Brera</div>
-    <div class="sm-item" data-win="win-calculator"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-calculator"></use></svg></span>Calculator</div>
-    <div class="sm-item" data-win="win-recyclebin"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-trash"></use></svg></span>Recycle Bin</div>
+    <div class="sm-item" data-win="win-cdburner"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/cd-drive.png" alt=""></span>CD Burner</div>
+    <div class="sm-item" data-win="win-patchnotes"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/wordpad.png" alt=""></span>README.txt</div>
+    <div class="sm-item" data-win="win-accademia"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/folder-open.png" alt=""></span>Accademia di Brera</div>
+    <div class="sm-item" data-win="win-calculator"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/calculator.png" alt=""></span>Calculator</div>
+    <div class="sm-item" data-win="win-recyclebin"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/recycle-bin.png" alt=""></span>Recycle Bin</div>
     <div class="sm-sep"></div>
+    <div class="sm-item" data-win="win-mycomputer"><span class="g"><img class="win98-menu-icon" src="media/windows98-icons/gear.png" alt=""></span>Settings</div>
     <div class="sm-item" id="sm-shutdown"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-power"></use></svg></span>Shut Down...</div>
   </div>
 </div>
