@@ -139,6 +139,7 @@
   .folder-icon { position: absolute; display: flex; flex-direction: column; align-items: center; width: 100px; text-align: center; padding: 8px 4px; cursor: default; }
   .folder-icon .glyph { font-size: 32px; line-height: 1; filter: drop-shadow(1px 1px 1px rgba(0,0,0,.35)); }
   .win98-icon { width: 32px; height: 32px; display: block; image-rendering: pixelated; }
+  .photo-icon { width: 32px; height: 32px; display: block; object-fit: cover; image-rendering: pixelated; border: 1px solid #000; }
   .ephemeral-purple-icon { filter: hue-rotate(245deg) saturate(1.7) brightness(.9); }
   .folder-icon .label { font-size: 11px; margin-top: 5px; line-height: 1.25; word-break: break-word; }
   .folder-icon:hover { background: var(--accent); color: #fff; }
@@ -570,7 +571,7 @@
   </div>
 
   <div class="icon" data-win="win-accademia" style="left:244px; top:242px;">
-    <div class="glyph"><img class="win98-icon" src="media/windows98-icons/folder-open.png" alt=""></div><div class="label">Accademia_di_Brera.jpg</div>
+    <div class="glyph"><img class="photo-icon" src="media/accademia-di-brera/breraaaaaaa.png" alt="Accademia di Belle Arti di Brera"></div><div class="label">Accademia_di_Brera.jpg</div>
   </div>
 
   <div class="icon" data-win="win-calculator" style="left:244px; top:354px;">
@@ -1164,7 +1165,7 @@ github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="
     </div>
     <div class="window-body app-body">
       <h3 style="margin:0 0 8px;">Accademia di Belle Arti di Brera</h3>
-      <img src="media/accademia-di-brera/breraaaaaaa.png" alt="Accademia di Belle Arti di Brera" style="width:100%; display:block; image-rendering:pixelated; border:1px solid #808080;">
+      <img src="media/accademia-di-brera/breraaaaaaa.png" alt="Accademia di Belle Arti di Brera" style="width:100%; max-height:300px; object-fit:contain; display:block; image-rendering:pixelated; border:1px solid #808080;">
       <div class="work-meta">Milan, Italy &nbsp;|&nbsp; where profilopanico was built, Net Art 1</div>
     </div>
   </div>
