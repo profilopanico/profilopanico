@@ -162,9 +162,23 @@
     background: var(--win-face); border-bottom: 1px solid var(--win-face-dark); box-shadow: inset 0 1px 0 #fff; font-size: 11px;
   }
 
+  /* ---------- calculator ---------- */
+  #calc-display {
+    width: 100%; box-sizing: border-box; text-align: right; font-family: "Courier New", monospace; font-size: 18px;
+    padding: 5px 8px; border-top: 1px solid var(--win-face-dark); border-left: 1px solid var(--win-face-dark);
+    border-right: 1px solid #fff; border-bottom: 1px solid #fff; box-shadow: inset 1px 1px 0 var(--win-face-shadow2);
+    background: #eaffea; margin-bottom: 6px;
+  }
+  .calc-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 4px; }
+  .calc-btn { padding: 10px 0; font-size: 14px; }
+  .calc-btn.op { background: #e8b878; }
+  .calc-btn.wide { grid-column: span 2; }
+
   /* ---------- AIM window ---------- */
   .aim-body { display: flex; flex-direction: column; height: 100%; }
   .aim-header { background: linear-gradient(180deg,#ffde8a,#f3b833); padding: 6px 8px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #a97e14; }
+  .msn-header { background: linear-gradient(180deg,#eaf7ff,#bcdfff); padding: 6px 8px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #5a9bd4; flex: 0 0 auto; }
+  .msn-footer { padding: 4px 8px; border-top: 1px solid #999; font-size: 11px; text-align: right; background: var(--win-face); flex: 0 0 auto; }
   .aim-status-dot { width: 9px; height: 9px; border-radius: 50%; background: #2ecc40; box-shadow: 0 0 3px #2ecc40; animation: blink 1.4s infinite; }
   .aim-log { flex: 1; overflow-y: auto; padding: 8px; background: #fff; font-size: 12px; -webkit-user-select: text; user-select: text; }
   .aim-log p { margin: 0 0 8px; }
@@ -362,6 +376,16 @@
   <rect x="10.5" y="13.5" width="3" height="12" fill="#fff" opacity=".25"/>
 </symbol>
 
+<symbol id="icon-msn" viewBox="0 0 32 32">
+  <ellipse cx="11" cy="11" rx="7" ry="5" fill="url(#gGreenBot)" stroke="#0a5c22" stroke-width="1" transform="rotate(-30 11 11)"/>
+  <ellipse cx="21" cy="11" rx="7" ry="5" fill="url(#gBlueScreen)" stroke="#04204a" stroke-width="1" transform="rotate(30 21 11)"/>
+  <ellipse cx="11" cy="21" rx="6" ry="4.2" fill="url(#gBlueScreen)" stroke="#04204a" stroke-width="1" transform="rotate(30 11 21)"/>
+  <ellipse cx="21" cy="21" rx="6" ry="4.2" fill="url(#gGreenBot)" stroke="#0a5c22" stroke-width="1" transform="rotate(-30 21 21)"/>
+  <ellipse cx="16" cy="16" rx="2" ry="7" fill="#2a2a2a"/>
+  <circle cx="16" cy="8" r="1.6" fill="#2a2a2a"/>
+  <path d="M16 8 L13 4 M16 8 L19 4" stroke="#2a2a2a" stroke-width="1" fill="none"/>
+</symbol>
+
 <symbol id="icon-robot" viewBox="0 0 32 32">
   <rect x="14" y="4" width="4" height="5" fill="#8a8a8a"/>
   <circle cx="16" cy="3" r="2" fill="#ff4d4d"/>
@@ -406,6 +430,13 @@
   <circle cx="14.7" cy="17.7" r="0.9" fill="#fff"/>
 </symbol>
 
+<symbol id="icon-patch" viewBox="0 0 32 32">
+  <path d="M6 3 H22 L26 7 V29 H6 Z" fill="url(#gPaper)" stroke="#000" stroke-width="1.2"/>
+  <path d="M22 3 L22 7 L26 7 Z" fill="#b8b8b8" stroke="#000" stroke-width="1"/>
+  <path d="M16 11 L17.6 14.4 L21.3 14.9 L18.6 17.4 L19.3 21 L16 19.2 L12.7 21 L13.4 17.4 L10.7 14.9 L14.4 14.4 Z" fill="#ffd54f" stroke="#8a6400" stroke-width="0.8"/>
+  <rect x="9" y="23" width="14" height="1.6" fill="#3949ab"/>
+</symbol>
+
 <symbol id="icon-message" viewBox="0 0 32 32">
   <rect x="4" y="6" width="24" height="16" rx="1" fill="#ffffe1" stroke="#000" stroke-width="1"/>
   <path d="M10 22 L8 28 L16 22 Z" fill="#ffffe1" stroke="#000" stroke-width="1"/>
@@ -444,6 +475,19 @@
   <circle cx="16" cy="16" r="2.5" fill="#000"/>
 </symbol>
 
+<symbol id="icon-calculator" viewBox="0 0 32 32">
+  <rect x="6" y="3" width="20" height="26" rx="2" fill="url(#gSilver)" stroke="#000" stroke-width="1.2"/>
+  <rect x="9" y="6" width="14" height="6" rx="1" fill="#c8e8c0" stroke="#345c2a" stroke-width="0.8"/>
+  <rect x="9" y="15" width="3.5" height="3.5" rx=".6" fill="#8a8a9a" stroke="#000" stroke-width=".6"/>
+  <rect x="14.2" y="15" width="3.5" height="3.5" rx=".6" fill="#8a8a9a" stroke="#000" stroke-width=".6"/>
+  <rect x="19.4" y="15" width="3.5" height="3.5" rx=".6" fill="#e07820" stroke="#000" stroke-width=".6"/>
+  <rect x="9" y="19.5" width="3.5" height="3.5" rx=".6" fill="#8a8a9a" stroke="#000" stroke-width=".6"/>
+  <rect x="14.2" y="19.5" width="3.5" height="3.5" rx=".6" fill="#8a8a9a" stroke="#000" stroke-width=".6"/>
+  <rect x="19.4" y="19.5" width="3.5" height="3.5" rx=".6" fill="#e07820" stroke="#000" stroke-width=".6"/>
+  <rect x="9" y="24" width="8.7" height="3.5" rx=".6" fill="#8a8a9a" stroke="#000" stroke-width=".6"/>
+  <rect x="19.4" y="24" width="3.5" height="3.5" rx=".6" fill="#e07820" stroke="#000" stroke-width=".6"/>
+</symbol>
+
 <symbol id="icon-stop" viewBox="0 0 32 32">
   <circle cx="16" cy="16" r="13" fill="#ff0000" stroke="#800000" stroke-width="1"/>
   <rect x="8" y="14" width="16" height="4" fill="#fff"/>
@@ -475,6 +519,10 @@
     <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-cd"></use></svg></div><div class="label">CD_Burner.exe</div>
   </div>
 
+  <div class="icon" data-win="win-patchnotes" style="left:20px; top:518px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-patch"></use></svg></div><div class="label">Patch Notes.txt</div>
+  </div>
+
   <div class="icon" data-win="win-folder-netart" style="left:132px; top:18px;">
     <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></div><div class="label">Net Art 1</div>
   </div>
@@ -488,7 +536,7 @@
   </div>
 
   <div class="icon" data-win="win-mheall" style="left:132px; top:354px;">
-    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-robot"></use></svg></div><div class="label">Mheall.ai.exe</div>
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-msn"></use></svg></div><div class="label">Mheall.ai.exe</div>
   </div>
 
   <div class="icon" data-win="win-ephemeral" style="left:244px; top:18px;">
@@ -501,6 +549,10 @@
 
   <div class="icon" data-win="win-accademia" style="left:244px; top:242px;">
     <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-photo"></use></svg></div><div class="label">Accademia_di_Brera.jpg</div>
+  </div>
+
+  <div class="icon" data-win="win-calculator" style="left:244px; top:354px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-calculator"></use></svg></div><div class="label">Calculator</div>
   </div>
 
   <div class="icon" data-win="win-recyclebin" style="right:20px; top:18px;">
@@ -961,34 +1013,23 @@ github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="
   <!-- ============ WINDOW: Mheall.ai (AIM style) ============ -->
   <div class="window" id="win-mheall" data-x="0.46" data-y="0.06" style="width:400px; height:480px;">
     <div class="title-bar">
-      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-robot"></use></svg></span><span>Mheall.ai - Instant Messenger</span></div>
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-msn"></use></svg></span><span>Mheall.ai - Instant Messenger</span></div>
       <div class="title-bar-controls">
         <button class="tb-btn" data-action="minimize">_</button>
         <button class="tb-btn" data-action="maximize">□</button>
         <button class="tb-btn" data-action="close">X</button>
       </div>
     </div>
-    <div class="window-body">
-      <div class="aim-body">
-        <div class="aim-header">
-          <span class="aim-status-dot"></span>
-          <b>Mheall.ai</b>
-          <span class="aim-live-badge">LIVE</span>
-          <span style="margin-left:auto; font-size:11px;">Online</span>
-        </div>
-        <div class="aim-log" id="aim-log">
-          <p><span class="from">Mheall.ai:</span> hi! i'm Mheall, your friendly AI assistant. ask me anything!</p>
-          <p><span class="from">Mheall.ai:</span> (i am, in fact, a person. i have been this entire conversation.)</p>
-          <p><span class="from">Mheall.ai:</span> this is the joke. and also not a joke.</p>
-          <p class="sys">Mheall.ai is a net art piece about the human labor hidden behind every "AI" assistant — there is always someone typing on the other end.</p>
-        </div>
-        <div style="padding:6px 8px; border-top:1px solid #999;">
-          <a href="https://tinyurl.com/mheall-ai" target="_blank" rel="noopener">Open Mheall.ai (LIVE) →</a>
-        </div>
-        <div class="aim-inputrow">
-          <input type="text" id="aim-input" placeholder="Type a message...">
-          <span class="btn98" id="aim-send">Send</span>
-        </div>
+    <div class="window-body" style="padding:0; display:flex; flex-direction:column;">
+      <div class="msn-header">
+        <span class="aim-status-dot"></span>
+        <b>Mheall.ai</b>
+        <span class="aim-live-badge">LIVE</span>
+        <span style="margin-left:auto; font-size:11px;">Online</span>
+      </div>
+      <iframe src="https://profilopanico.github.io/mheall/" title="Mheall.ai" style="flex:1; width:100%; border:0; background:#fff;" loading="lazy"></iframe>
+      <div class="msn-footer">
+        <a href="https://profilopanico.github.io/mheall/" target="_blank" rel="noopener">Open fullscreen ↗</a>
       </div>
     </div>
   </div>
@@ -1072,6 +1113,71 @@ github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="
       <h3 style="margin:0 0 8px;">Accademia di Belle Arti di Brera</h3>
       <div class="placeholder-box">[ PHOTO PLACEHOLDER ]<br>drop a photo of Accademia di Brera here</div>
       <div class="work-meta">Milan, Italy &nbsp;|&nbsp; where profilopanico was built, Net Art 1</div>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: Patch Notes ============ -->
+  <div class="window" id="win-patchnotes" data-x="0.32" data-y="0.07" style="width:480px; height:420px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-patch"></use></svg></span><span>Patch Notes.txt</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="menu-bar">
+      <div class="menu-item">File<div class="dropdown"><div data-menu-action="exit" data-win="win-patchnotes">Close</div></div></div>
+      <div class="menu-item">Edit<div class="dropdown"><div>Copy</div><div>Paste</div></div></div>
+      <div class="menu-item">Help<div class="dropdown"><div data-menu-action="about">About</div></div></div>
+    </div>
+    <div class="window-body notepad-body">PATCH NOTES
+===========
+
+v1.0 — 2026-09-24
+------------------
+- profilopanico goes live.
+- Desktop rebuilt as the artwork: course folders, easter eggs,
+  a playable piece, a live chat, a working calculator.
+
+------------------------------------------------------------
+[This log is a work in progress — more entries and the full
+dossier/fascicolo updates go here.]</div>
+  </div>
+
+
+  <!-- ============ WINDOW: Calculator ============ -->
+  <div class="window" id="win-calculator" data-x="0.40" data-y="0.15" style="width:210px; height:290px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-calculator"></use></svg></span><span>Calculator</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body">
+      <input type="text" id="calc-display" readonly value="0">
+      <div class="calc-grid">
+        <span class="btn98 calc-btn wide" data-calc="clear">Clear</span>
+        <span class="btn98 calc-btn" data-calc="back">&larr;</span>
+        <span class="btn98 calc-btn op" data-calc="/">&divide;</span>
+        <span class="btn98 calc-btn" data-calc="7">7</span>
+        <span class="btn98 calc-btn" data-calc="8">8</span>
+        <span class="btn98 calc-btn" data-calc="9">9</span>
+        <span class="btn98 calc-btn op" data-calc="*">&times;</span>
+        <span class="btn98 calc-btn" data-calc="4">4</span>
+        <span class="btn98 calc-btn" data-calc="5">5</span>
+        <span class="btn98 calc-btn" data-calc="6">6</span>
+        <span class="btn98 calc-btn op" data-calc="-">-</span>
+        <span class="btn98 calc-btn" data-calc="1">1</span>
+        <span class="btn98 calc-btn" data-calc="2">2</span>
+        <span class="btn98 calc-btn" data-calc="3">3</span>
+        <span class="btn98 calc-btn op" data-calc="+">+</span>
+        <span class="btn98 calc-btn wide" data-calc="0">0</span>
+        <span class="btn98 calc-btn" data-calc=".">.</span>
+        <span class="btn98 calc-btn op" data-calc="=">=</span>
+      </div>
     </div>
   </div>
 
@@ -1232,7 +1338,9 @@ Thanks for looking closely.</div>
     <div class="sm-item" data-win="win-mheall"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-robot"></use></svg></span>Mheall.ai</div>
     <div class="sm-sep"></div>
     <div class="sm-item" data-win="win-cdburner"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-cd"></use></svg></span>CD Burner</div>
+    <div class="sm-item" data-win="win-patchnotes"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-patch"></use></svg></span>Patch Notes</div>
     <div class="sm-item" data-win="win-accademia"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-photo"></use></svg></span>Accademia di Brera</div>
+    <div class="sm-item" data-win="win-calculator"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-calculator"></use></svg></span>Calculator</div>
     <div class="sm-item" data-win="win-recyclebin"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-trash"></use></svg></span>Recycle Bin</div>
     <div class="sm-sep"></div>
     <div class="sm-item" id="sm-shutdown"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-power"></use></svg></span>Shut Down...</div>
@@ -1630,34 +1738,32 @@ Press any key, or click anywhere, to continue.
     setTimeout(function () { win.style.transform = "translateX(0)"; }, 160);
   });
 
-  // ---------- AIM chat ----------
-  var aimInput = document.getElementById("aim-input");
-  var aimSend = document.getElementById("aim-send");
-  var aimLog = document.getElementById("aim-log");
-  var replies = [
-    "still just a person over here. but thanks for chatting!",
-    "i'd love to tell you i'm a neural network. i'm not. i'm someone with a keyboard.",
-    "that's a great question. i'm going to answer it the way a human would: honestly, and a little slowly.",
-    "beep boop. (that part was a joke. the rest of this isn't.)"
-  ];
-  function aimSay() {
-    var val = aimInput.value.trim();
-    if (!val) return;
-    var p1 = document.createElement("p");
-    p1.innerHTML = '<span class="from" style="color:#0057b7;">you:</span> ' + val.replace(/</g, "&lt;");
-    aimLog.appendChild(p1);
-    aimInput.value = "";
-    setTimeout(function () {
-      var p2 = document.createElement("p");
-      var reply = replies[Math.floor(Math.random() * replies.length)];
-      p2.innerHTML = '<span class="from">Mheall.ai:</span> ' + reply;
-      aimLog.appendChild(p2);
-      aimLog.scrollTop = aimLog.scrollHeight;
-    }, 500);
-    aimLog.scrollTop = aimLog.scrollHeight;
-  }
-  if (aimSend) aimSend.addEventListener("click", aimSay);
-  if (aimInput) aimInput.addEventListener("keydown", function (e) { if (e.key === "Enter") aimSay(); });
+  // ---------- calculator ----------
+  (function () {
+    var display = document.getElementById("calc-display");
+    if (!display) return;
+    var expr = "";
+    function render() { display.value = expr === "" ? "0" : expr; }
+    document.querySelectorAll(".calc-btn").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var v = btn.dataset.calc;
+        if (v === "clear") { expr = ""; }
+        else if (v === "back") { expr = expr.slice(0, -1); }
+        else if (v === "=") {
+          try {
+            var safe = expr.replace(/[^0-9+\-*/.()]/g, "");
+            var result = Function('"use strict";return (' + safe + ")")();
+            expr = (result === undefined || isNaN(result)) ? "" : String(result);
+          } catch (e) { expr = ""; display.value = "Error"; return; }
+        } else {
+          expr += v;
+        }
+        render();
+      });
+    });
+    render();
+  })();
+
 
   // ---------- clock ----------
   function updateClock() {
