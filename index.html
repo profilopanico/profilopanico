@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>profilopanico</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%96%A5%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden;
+    font-family: Tahoma, "MS Sans Serif", Geneva, Arial, sans-serif;
+    font-size: 12px; color: #000;
+    -webkit-user-select: none; user-select: none;
+  }
+  body {
+    background-color: #008080;
+    background-image:
+      linear-gradient(135deg, rgba(255,255,255,.05) 25%, transparent 25%, transparent 50%,
+        rgba(255,255,255,.05) 50%, rgba(255,255,255,.05) 75%, transparent 75%, transparent);
+    background-size: 6px 6px;
+  }
+  button { font-family: inherit; font-size: inherit; }
+
+  /* ---------- desktop & icons ---------- */
+  #desktop { position: absolute; top: 0; left: 0; right: 0; bottom: 32px; overflow: hidden; }
+
+  .icon {
+    position: absolute; width: 76px; padding: 4px 2px; display: flex; flex-direction: column;
+    align-items: center; gap: 3px; cursor: default; touch-action: none;
+  }
+  .icon .glyph {
+    font-size: 32px; line-height: 1;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,.7));
+  }
+  .glyph svg { width: 32px; height: 32px; display: block; }
+  .title-bar-text svg { width: 15px; height: 15px; display: block; }
+  .sm-item .g svg { width: 18px; height: 18px; display: block; }
+  .task-btn svg { width: 14px; height: 14px; display: block; }
+  .folder-icon .glyph svg { width: 32px; height: 32px; display: block; }
+  .icon .label {
+    color: #fff; text-shadow: 1px 1px 1px #000; text-align: center; font-size: 11px;
+    padding: 1px 4px; line-height: 1.25; word-break: break-word;
+  }
+  .icon.selected .label { background: #000080; outline: 1px dotted #fff; }
+  .icon.selected .glyph { filter: drop-shadow(1px 1px 1px rgba(0,0,0,.7)) brightness(.75) saturate(1.4); }
+
+  /* ---------- 3D bevel helpers ---------- */
+  .bevel-out {
+    border-top: 1px solid #fff; border-left: 1px solid #fff;
+    border-right: 1px solid #000; border-bottom: 1px solid #000;
+    box-shadow: inset -1px -1px 0 #808080, inset 1px 1px 0 #dfdfdf;
+  }
+  .bevel-in {
+    border-top: 1px solid #808080; border-left: 1px solid #808080;
+    border-right: 1px solid #fff; border-bottom: 1px solid #fff;
+    box-shadow: inset -1px -1px 0 #fff, inset 1px 1px 0 #404040;
+  }
+
+  /* ---------- windows ---------- */
+  .window {
+    position: absolute; display: none; flex-direction: column;
+    background: #c0c0c0; min-width: 220px; max-width: 94vw; max-height: 86vh;
+    border-top: 2px solid #dfdfdf; border-left: 2px solid #dfdfdf;
+    border-right: 2px solid #000; border-bottom: 2px solid #000;
+    box-shadow: inset -1px -1px 0 #808080, inset 1px 1px 0 #fff, 3px 3px 8px rgba(0,0,0,.5);
+  }
+  .window.dialog { min-width: 260px; }
+  .title-bar {
+    height: 22px; flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 3px; gap: 6px; background: linear-gradient(90deg,#000080,#1084d0); color: #fff;
+    font-weight: bold; font-size: 12px; cursor: move; touch-action: none;
+  }
+  .window:not(.active) .title-bar { background: linear-gradient(90deg,#7f7f7f,#b6b6b6); color: #e0e0e0; }
+  .title-bar-text { display: flex; align-items: center; gap: 5px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .title-bar-controls { display: flex; gap: 2px; flex: 0 0 auto; }
+  .tb-btn {
+    width: 17px; height: 15px; padding: 0; background: #c0c0c0; cursor: pointer;
+    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #000; border-bottom: 1px solid #000;
+    font-size: 10px; line-height: 1; display: flex; align-items: center; justify-content: center;
+  }
+  .tb-btn:active { border-color: #000 #fff #fff #000; }
+  .menu-bar { flex: 0 0 auto; display: flex; gap: 2px; padding: 2px 4px; border-bottom: 1px solid #808080; background: #c0c0c0; position: relative; }
+  .menu-item { position: relative; padding: 2px 6px; cursor: pointer; }
+  .menu-item:hover, .menu-item.open { background: #000080; color: #fff; }
+  .dropdown {
+    display: none; position: absolute; top: 100%; left: 0; min-width: 140px; background: #c0c0c0;
+    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #000; border-bottom: 1px solid #000;
+    z-index: 5; box-shadow: 2px 2px 4px rgba(0,0,0,.4);
+  }
+  .menu-item.open .dropdown { display: block; }
+  .dropdown div { padding: 4px 18px; white-space: nowrap; }
+  .dropdown div:hover { background: #000080; color: #fff; }
+  .window-body { flex: 1 1 auto; overflow: auto; background: #fff; }
+  .notepad-body {
+    padding: 8px 10px; font-family: "Courier New", monospace; font-size: 12.5px; line-height: 1.5;
+    white-space: pre-wrap; -webkit-user-select: text; user-select: text;
+  }
+  .app-body { padding: 10px; -webkit-user-select: text; user-select: text; }
+  .status-bar { flex: 0 0 auto; display: flex; justify-content: space-between; padding: 2px 6px; font-size: 11px; background: #c0c0c0; border-top: 1px solid #808080; box-shadow: inset 0 1px 0 #fff; }
+
+  .placeholder-box {
+    border: 2px dashed #808080; background: repeating-linear-gradient(45deg,#eee,#eee 10px,#e2e2e2 10px,#e2e2e2 20px);
+    color: #555; display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 20px; font-size: 12px; margin-bottom: 10px; min-height: 160px;
+  }
+  .work-meta { font-size: 11px; color: #444; border-top: 1px solid #ccc; margin-top: 8px; padding-top: 6px; }
+  .folder-grid { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 4px; }
+  .folder-icon { display: flex; flex-direction: column; align-items: center; width: 100px; text-align: center; padding: 8px 4px; cursor: default; }
+  .folder-icon .glyph { font-size: 32px; line-height: 1; filter: drop-shadow(1px 1px 1px rgba(0,0,0,.35)); }
+  .folder-icon .label { font-size: 11px; margin-top: 5px; line-height: 1.25; word-break: break-word; }
+  .folder-icon:hover { background: #000080; color: #fff; }
+  .btn98 {
+    background: #c0c0c0; padding: 4px 14px; cursor: pointer;
+    border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #000; border-bottom: 1px solid #000;
+  }
+  .btn98:active { border-color: #000 #fff #fff #000; }
+
+  /* ---------- The Ephemeral Archive launcher (Win98 style) ---------- */
+  .arcade-body {
+    position: relative; height: 100%; background: #c0c0c0; color: #000; overflow: hidden;
+    font-family: Tahoma, "MS Sans Serif", sans-serif; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .arcade-icon svg { width: 56px; height: 56px; display: block; margin: 0 auto 10px; filter: drop-shadow(1px 1px 1px rgba(0,0,0,.4)); }
+  .arcade-title { font-size: 16px; font-weight: bold; text-align: center; margin-bottom: 3px; }
+  .arcade-sub { font-size: 11px; color: #444; text-align: center; margin-bottom: 14px; }
+  .arcade-desc { background: #fff; padding: 10px 14px; font-size: 11.5px; line-height: 1.5; max-width: 320px; text-align: center; }
+  .arcade-loading { display: none; text-align: center; font-size: 12px; }
+  .arcade-frame-wrap { display: none; position: absolute; inset: 0; flex-direction: column; }
+  .arcade-frame-wrap iframe { flex: 1; width: 100%; border: 0; background: #000; }
+  .arcade-toolbar {
+    display: flex; align-items: center; justify-content: space-between; padding: 3px 6px; gap: 8px;
+    background: #c0c0c0; border-bottom: 1px solid #808080; box-shadow: inset 0 1px 0 #fff; font-size: 11px;
+  }
+
+  /* ---------- AIM window ---------- */
+  .aim-body { display: flex; flex-direction: column; height: 100%; }
+  .aim-header { background: linear-gradient(180deg,#ffde8a,#f3b833); padding: 6px 8px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #a97e14; }
+  .aim-status-dot { width: 9px; height: 9px; border-radius: 50%; background: #2ecc40; box-shadow: 0 0 3px #2ecc40; animation: blink 1.4s infinite; }
+  .aim-log { flex: 1; overflow-y: auto; padding: 8px; background: #fff; font-size: 12px; -webkit-user-select: text; user-select: text; }
+  .aim-log p { margin: 0 0 8px; }
+  .aim-log .from { font-weight: bold; color: #7a1fa2; }
+  .aim-log .sys { color: #888; font-style: italic; }
+  .aim-inputrow { display: flex; gap: 4px; padding: 6px; border-top: 1px solid #999; background: #c0c0c0; flex: 0 0 auto; }
+  .aim-inputrow input { flex: 1; padding: 3px 5px; border: 1px solid #808080; box-shadow: inset 1px 1px 0 #404040; }
+  .aim-live-badge { background: #2ecc40; color: #fff; font-size: 10px; font-weight: bold; padding: 1px 6px; border-radius: 3px; animation: blink 1.4s infinite; }
+
+  /* ---------- taskbar ---------- */
+  #taskbar {
+    position: fixed; left: 0; right: 0; bottom: 0; height: 32px; z-index: 9999;
+    background: #c0c0c0; border-top: 2px solid #fff; display: flex; align-items: center; padding: 2px 4px; gap: 6px;
+  }
+  #start-btn {
+    display: flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px; font-weight: bold; cursor: pointer;
+    background: #c0c0c0; border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #000; border-bottom: 1px solid #000;
+  }
+  #start-btn.active { border-color: #000 #fff #fff #000; background: #b7b7b7; }
+  #start-flag { font-size: 14px; }
+  #taskbar-sep { width: 2px; height: 24px; border-left: 1px solid #808080; border-right: 1px solid #fff; }
+  #taskbar-tasks { flex: 1; display: flex; gap: 3px; height: 26px; overflow: hidden; }
+  .task-btn {
+    max-width: 160px; height: 26px; padding: 0 8px; display: flex; align-items: center; gap: 5px;
+    overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer; font-size: 11px;
+    background: #c0c0c0; border-top: 1px solid #fff; border-left: 1px solid #fff; border-right: 1px solid #000; border-bottom: 1px solid #000;
+  }
+  .task-btn.active { border-color: #000 #fff #fff #000; background: #b7b7b7; }
+  #tray {
+    display: flex; align-items: center; gap: 7px; height: 24px; padding: 0 8px;
+    border-top: 1px solid #808080; border-left: 1px solid #808080; box-shadow: inset 1px 1px 0 #fff; font-size: 11px;
+  }
+  .rec-dot { width: 8px; height: 8px; border-radius: 50%; background: #ff0000; animation: blink 1s steps(1) infinite; cursor: help; }
+  @keyframes blink { 50% { opacity: .15; } }
+
+  /* ---------- start menu ---------- */
+  #start-menu {
+    position: fixed; left: 2px; bottom: 34px; width: 230px; z-index: 10000; display: none;
+    background: #c0c0c0; border-top: 2px solid #fff; border-left: 2px solid #fff; border-right: 2px solid #000; border-bottom: 2px solid #000;
+    box-shadow: 3px 3px 8px rgba(0,0,0,.5);
+  }
+  #start-menu.open { display: flex; }
+  .sm-side { width: 24px; background: linear-gradient(180deg,#000080,#1084d0); display: flex; align-items: flex-end; padding: 8px 0; }
+  .sm-side span { writing-mode: vertical-rl; transform: rotate(180deg); color: #fff; font-weight: bold; font-size: 15px; letter-spacing: 2px; padding-left: 3px;}
+  .sm-items { flex: 1; padding: 3px; display: flex; flex-direction: column; }
+  .sm-item { display: flex; align-items: center; gap: 9px; padding: 5px 8px; cursor: pointer; }
+  .sm-item:hover { background: #000080; color: #fff; }
+  .sm-item .g { font-size: 16px; width: 20px; text-align: center; }
+  .sm-sep { height: 1px; background: #808080; box-shadow: 0 1px 0 #fff; margin: 4px 6px; }
+
+  /* ---------- balloon ---------- */
+  #balloon {
+    position: fixed; right: 6px; bottom: 38px; width: 220px; z-index: 10500; display: none; cursor: pointer;
+    background: #ffffe1; border: 1px solid #000; padding: 7px 9px; font-size: 11px; box-shadow: 2px 2px 5px rgba(0,0,0,.5);
+  }
+  #balloon.show { display: block; }
+  #balloon b { display: block; margin-bottom: 4px; }
+  #balloon .close-hint { display: block; margin-top: 5px; color: #666; font-size: 10px; }
+
+  /* ---------- screensaver ---------- */
+  #screensaver {
+    position: fixed; inset: 0; background: #000; z-index: 20000; display: none;
+    align-items: center; justify-content: center; overflow: hidden; cursor: pointer;
+  }
+  #screensaver.on { display: flex; }
+  #screensaver-yt { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+  .ss-hit { position: absolute; inset: 0; cursor: pointer; }
+  .ss-text {
+    position: absolute; left: 0; right: 0; bottom: 18px; pointer-events: none;
+    white-space: nowrap; color: #39ff6a; font-family: "Courier New", monospace; font-size: 22px; font-weight: bold;
+    text-shadow: 0 0 6px #39ff6a, 2px 2px 3px #000; animation: scrollx 14s linear infinite;
+  }
+  @keyframes scrollx { from { transform: translateX(100vw); } to { transform: translateX(-140%); } }
+
+  /* ---------- bsod ---------- */
+  #bsod {
+    position: fixed; inset: 0; background: #0000aa; color: #fff; z-index: 21000; display: none;
+    font-family: "Courier New", monospace; font-size: 16px; line-height: 1.6; padding: 60px; cursor: pointer;
+  }
+  #bsod.on { display: block; }
+  #bsod .blk { background: #fff; color: #0000aa; padding: 2px 6px; }
+
+  /* ---------- misc ---------- */
+  a { color: #0000ee; }
+  a:visited { color: #551a8b; }
+</style>
+</head>
+<body>
+
+<svg style="position:absolute; width:0; height:0; overflow:hidden;" aria-hidden="true">
+<defs>
+
+<symbol id="icon-computer" viewBox="0 0 32 32">
+  <rect x="4" y="4" width="24" height="18" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+  <rect x="7" y="7" width="18" height="12" fill="#000080"/>
+  <rect x="9" y="9" width="8" height="5" fill="#c0c0c0"/>
+  <rect x="9" y="15" width="14" height="2" fill="#fff"/>
+  <rect x="12" y="22" width="8" height="3" fill="#808080" stroke="#000" stroke-width="1"/>
+  <rect x="8" y="25" width="16" height="3" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+</symbol>
+
+<symbol id="icon-folder" viewBox="0 0 32 32">
+  <path d="M3 10 L3 7 L13 7 L16 10 L29 10 L29 26 L3 26 Z" fill="#ffd700" stroke="#7a5c00" stroke-width="1"/>
+  <rect x="3" y="10" width="26" height="3" fill="#fff2ad"/>
+</symbol>
+
+<symbol id="icon-notepad" viewBox="0 0 32 32">
+  <path d="M6 3 H22 L26 7 V29 H6 Z" fill="#ffffff" stroke="#000" stroke-width="1"/>
+  <path d="M22 3 L22 7 L26 7 Z" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+  <rect x="9" y="12" width="14" height="2" fill="#000080"/>
+  <rect x="9" y="16" width="14" height="2" fill="#000080"/>
+  <rect x="9" y="20" width="10" height="2" fill="#000080"/>
+</symbol>
+
+<symbol id="icon-cd" viewBox="0 0 32 32">
+  <circle cx="16" cy="16" r="13" fill="#dedede" stroke="#000" stroke-width="1"/>
+  <circle cx="16" cy="16" r="9" fill="none" stroke="#b8b8b8" stroke-width="1"/>
+  <circle cx="16" cy="16" r="4" fill="#808080" stroke="#000" stroke-width="1"/>
+  <circle cx="16" cy="16" r="1.4" fill="#fff"/>
+  <path d="M8 8 A11 11 0 0 1 20 6" stroke="#fff" stroke-width="2" fill="none" opacity=".6"/>
+</symbol>
+
+<symbol id="icon-trash" viewBox="0 0 32 32">
+  <rect x="9" y="12" width="14" height="15" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+  <rect x="7" y="8" width="18" height="3" fill="#808080" stroke="#000" stroke-width="1"/>
+  <rect x="12" y="5" width="8" height="3" fill="#808080" stroke="#000" stroke-width="1"/>
+  <rect x="12" y="14" width="2" height="10" fill="#808080"/>
+  <rect x="15" y="14" width="2" height="10" fill="#808080"/>
+  <rect x="18" y="14" width="2" height="10" fill="#808080"/>
+</symbol>
+
+<symbol id="icon-robot" viewBox="0 0 32 32">
+  <rect x="14" y="4" width="4" height="5" fill="#808080"/>
+  <circle cx="16" cy="3" r="2" fill="#ff0000"/>
+  <rect x="7" y="9" width="18" height="15" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+  <rect x="10" y="13" width="4" height="4" fill="#00aa00"/>
+  <rect x="18" y="13" width="4" height="4" fill="#00aa00"/>
+  <rect x="11" y="20" width="10" height="2" fill="#000"/>
+</symbol>
+
+<symbol id="icon-film" viewBox="0 0 32 32">
+  <rect x="4" y="6" width="24" height="20" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+  <rect x="4" y="6" width="24" height="4" fill="#000"/>
+  <rect x="4" y="22" width="24" height="4" fill="#000"/>
+  <circle cx="8" cy="8" r="1.3" fill="#fff"/><circle cx="14" cy="8" r="1.3" fill="#fff"/>
+  <circle cx="20" cy="8" r="1.3" fill="#fff"/><circle cx="26" cy="8" r="1.3" fill="#fff"/>
+  <circle cx="8" cy="24" r="1.3" fill="#fff"/><circle cx="14" cy="24" r="1.3" fill="#fff"/>
+  <circle cx="20" cy="24" r="1.3" fill="#fff"/><circle cx="26" cy="24" r="1.3" fill="#fff"/>
+  <rect x="8" y="12" width="16" height="8" fill="#000080"/>
+</symbol>
+
+<symbol id="icon-cube" viewBox="0 0 32 32">
+  <polygon points="16,3 28,9 28,23 16,29 4,23 4,9" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+  <polygon points="16,3 28,9 16,15 4,9" fill="#dfdfdf" stroke="#000" stroke-width="1"/>
+  <polygon points="16,15 28,9 28,23 16,29" fill="#808080" stroke="#000" stroke-width="1"/>
+  <polygon points="16,15 4,9 4,23 16,29" fill="#a6a6a6" stroke="#000" stroke-width="1"/>
+</symbol>
+
+<symbol id="icon-cloud" viewBox="0 0 32 32">
+  <path d="M9 22 Q4 22 4 17 Q4 13 8 13 Q9 8 15 8 Q20 8 21 13 Q27 13 27 18 Q27 22 22 22 Z" fill="#eaf6ff" stroke="#000" stroke-width="1"/>
+  <rect x="10" y="16" width="2" height="2" fill="#000080"/>
+  <rect x="14" y="16" width="2" height="2" fill="#000080"/>
+  <rect x="18" y="16" width="2" height="2" fill="#000080"/>
+</symbol>
+
+<symbol id="icon-joystick" viewBox="0 0 32 32">
+  <polygon points="16,17 26,22 16,27 6,22" fill="#e8e8e8" stroke="#000" stroke-width="1"/>
+  <polygon points="26,22 26,25 16,30 16,27" fill="#8e8e8e" stroke="#000" stroke-width="1"/>
+  <polygon points="6,22 6,25 16,30 16,27" fill="#c8c8c8" stroke="#000" stroke-width="1"/>
+  <rect x="14.5" y="6" width="3" height="14" fill="#b0b0b0" stroke="#000" stroke-width="1"/>
+  <rect x="14.5" y="6" width="1.3" height="14" fill="#f0f0f0"/>
+  <ellipse cx="16" cy="6" rx="2" ry="1.2" fill="#e0e0e0" stroke="#000" stroke-width="1"/>
+  <ellipse cx="16" cy="19" rx="4.2" ry="2" fill="#d6d6d6" stroke="#000" stroke-width="1"/>
+  <rect x="21" y="20" width="2" height="2" fill="#c00000" stroke="#500" stroke-width="0.5"/>
+</symbol>
+
+<symbol id="icon-eye-folder" viewBox="0 0 32 32">
+  <path d="M3 10 L3 7 L13 7 L16 10 L29 10 L29 26 L3 26 Z" fill="#7a1fc7" stroke="#3d0f66" stroke-width="1"/>
+  <rect x="3" y="10" width="26" height="3" fill="#b073ec"/>
+  <path d="M6 19 Q16 11 26 19 Q16 25 6 19 Z" fill="#fff" stroke="#000" stroke-width="1"/>
+  <circle cx="16" cy="19" r="3.6" fill="#3d0f66"/>
+  <circle cx="16" cy="19" r="1.5" fill="#000"/>
+  <circle cx="14.7" cy="17.7" r="0.9" fill="#fff"/>
+</symbol>
+
+<symbol id="icon-message" viewBox="0 0 32 32">
+  <rect x="4" y="6" width="24" height="16" rx="1" fill="#ffffe1" stroke="#000" stroke-width="1"/>
+  <path d="M10 22 L8 28 L16 22 Z" fill="#ffffe1" stroke="#000" stroke-width="1"/>
+  <rect x="8" y="11" width="16" height="2" fill="#000080"/>
+  <rect x="8" y="15" width="10" height="2" fill="#000080"/>
+</symbol>
+
+<symbol id="icon-search" viewBox="0 0 32 32">
+  <circle cx="14" cy="14" r="9" fill="#fff" stroke="#000" stroke-width="2"/>
+  <rect x="19.5" y="19.5" width="4" height="11" transform="rotate(45 19.5 19.5)" fill="#808080" stroke="#000" stroke-width="1"/>
+</symbol>
+
+<symbol id="icon-power" viewBox="0 0 32 32">
+  <circle cx="16" cy="18" r="10" fill="none" stroke="#000" stroke-width="3"/>
+  <rect x="14.5" y="4" width="3" height="12" fill="#ff0000" stroke="#000" stroke-width="1"/>
+</symbol>
+
+<symbol id="icon-disk" viewBox="0 0 32 32">
+  <rect x="5" y="4" width="22" height="24" fill="#000080" stroke="#000" stroke-width="1"/>
+  <rect x="9" y="4" width="10" height="8" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+  <rect x="8" y="18" width="16" height="8" fill="#fff" stroke="#000" stroke-width="1"/>
+</symbol>
+
+<symbol id="icon-gear" viewBox="0 0 32 32">
+  <g fill="#808080" stroke="#000" stroke-width="1">
+    <rect x="14" y="2" width="4" height="6"/>
+    <rect x="14" y="24" width="4" height="6"/>
+    <rect x="2" y="14" width="6" height="4"/>
+    <rect x="24" y="14" width="6" height="4"/>
+    <rect x="5.5" y="5.5" width="5" height="5" transform="rotate(45 8 8)"/>
+    <rect x="21.5" y="5.5" width="5" height="5" transform="rotate(45 24 8)"/>
+    <rect x="5.5" y="21.5" width="5" height="5" transform="rotate(45 8 24)"/>
+    <rect x="21.5" y="21.5" width="5" height="5" transform="rotate(45 24 24)"/>
+  </g>
+  <circle cx="16" cy="16" r="7" fill="#c0c0c0" stroke="#000" stroke-width="1"/>
+  <circle cx="16" cy="16" r="2.5" fill="#000"/>
+</symbol>
+
+<symbol id="icon-stop" viewBox="0 0 32 32">
+  <circle cx="16" cy="16" r="13" fill="#ff0000" stroke="#800000" stroke-width="1"/>
+  <rect x="8" y="14" width="16" height="4" fill="#fff"/>
+</symbol>
+
+</defs>
+</svg>
+
+<div id="desktop">
+
+  <!-- ============ DESKTOP ICONS ============ -->
+  <div class="icon" data-win="win-mycomputer" style="left:20px; top:18px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-computer"></use></svg></div><div class="label">My Computer</div>
+  </div>
+
+  <div class="icon" data-win="win-readme" style="left:20px; top:118px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></div><div class="label">README.txt</div>
+  </div>
+
+  <div class="icon" data-win="win-profile" style="left:20px; top:218px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></div><div class="label">profile.bio.txt</div>
+  </div>
+
+  <div class="icon" data-win="win-homecasa-error" style="left:20px; top:318px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></div><div class="label">HOME_CASA</div>
+  </div>
+
+  <div class="icon" data-win="win-cdburner" style="left:20px; top:418px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-cd"></use></svg></div><div class="label">CD_Burner.exe</div>
+  </div>
+
+  <div class="icon" data-win="win-projects-folder" style="left:132px; top:18px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></div><div class="label">Progetti Brera Net Art 1</div>
+  </div>
+
+  <div class="icon" data-win="win-mheall" style="left:132px; top:130px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-robot"></use></svg></div><div class="label">Mheall.ai.exe</div>
+  </div>
+
+  <div class="icon" data-win="win-recyclebin" style="right:20px; top:18px;">
+    <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-trash"></use></svg></div><div class="label">Recycle Bin</div>
+  </div>
+
+
+  <!-- ============ WINDOW: My Computer ============ -->
+  <div class="window" id="win-mycomputer" data-x="0.30" data-y="0.10" style="width:360px; height:300px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-computer"></use></svg></span><span>My Computer</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body">
+      <div id="mycomputer-drives">
+        <p>3 item(s)</p>
+        <div style="display:flex; gap:26px; flex-wrap:wrap; padding:10px 4px;">
+          <div style="text-align:center; width:80px;">
+            <div><svg viewBox="0 0 32 32" style="width:30px; height:30px;"><use href="#icon-disk"></use></svg></div>
+            <div>C:\PROFILOPANICO<br>(local disk)</div>
+          </div>
+          <div style="text-align:center; width:80px;">
+            <div><svg viewBox="0 0 32 32" style="width:30px; height:30px;"><use href="#icon-disk"></use></svg></div>
+            <div>A:\<br>(empty)</div>
+          </div>
+          <div style="text-align:center; width:80px; cursor:pointer;" id="properties-open">
+            <div><svg viewBox="0 0 32 32" style="width:30px; height:30px;"><use href="#icon-gear"></use></svg></div>
+            <div>Properties</div>
+          </div>
+        </div>
+      </div>
+      <div id="mycomputer-properties" style="display:none;">
+        <p><b>System Properties</b></p>
+        <p>System: profilopanico 98<br>
+        Registered to: Cristian De Canio<br>
+        Organization: Accademia di Belle Arti di Brera — Net Art 1</p>
+        <p><b>Processes currently running:</b></p>
+        <div class="notepad-body" style="padding:6px; border:1px solid #808080; background:#f4f4f4; white-space:pre-wrap;">notepad.exe .......... running
+aim.exe ............... running
+cdplayer.exe .......... running
+webcam_monitor.exe .... running (hidden)
+human_operator.exe .... always on</div>
+        <p style="margin-top:8px;"><span class="btn98" id="properties-back">&larr; Back</span></p>
+      </div>
+    </div>
+    <div class="status-bar"><span>profilopanico (C:)</span><span>1 object(s) selected</span></div>
+  </div>
+
+
+  <!-- ============ WINDOW: README.txt (Notepad) ============ -->
+  <div class="window" id="win-readme" data-x="0.34" data-y="0.07" style="width:520px; height:440px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span><span>README.txt - Notepad</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="menu-bar">
+      <div class="menu-item">File<div class="dropdown"><div data-menu-action="exit" data-win="win-readme">Exit</div></div></div>
+      <div class="menu-item">Edit<div class="dropdown"><div>Cut</div><div>Copy</div><div>Paste</div></div></div>
+      <div class="menu-item">Search<div class="dropdown"><div>Find...</div></div></div>
+      <div class="menu-item">Help<div class="dropdown"><div data-menu-action="about">About Notepad</div></div></div>
+    </div>
+    <div class="window-body notepad-body">PROFILOPANICO.EXE
+==================
+
+Welcome. You are inside a computer that was left on, on purpose.
+
+This is not a metaphor for a portfolio — it IS a portfolio, disguised
+as a desktop, disguised as an operating system that stopped receiving
+updates sometime around 1998.
+
+Everything you can open here is a small piece I made. Some are
+finished. Some are placeholders, waiting for the real file to be
+dropped in later. Click around. Drag the windows. Minimize things.
+Nothing here is precious — it's a machine, and machines are meant
+to be used.
+
+------------------------------------------------------------
+ABOUT THIS PROJECT
+
+"profilopanico" was built for Net Art 1, taught by Domenico Quaranta,
+at Accademia di Belle Arti di Brera.
+
+The starting question was simple: what if the interface itself was
+the artwork, instead of just the container for it? A desktop is
+already a kind of self-portrait — the icons you keep, the ones you
+hide, the folder you never open again, the assistant pretending to
+be smart, the "access denied" you put on your own life.
+
+Somewhere between every icon and every window there is a person
+doing invisible work to keep the illusion running — answering as
+the "AI", drawing the icons, writing this text, watching you read
+it right now. That labor is usually hidden by design. Here it's
+just... left half-visible. Like Eva and Franco Mattes' work keeps
+reminding us: there is always a human behind the machine, even when
+the machine insists otherwise.
+
+------------------------------------------------------------
+HOW TO USE THIS COMPUTER
+
+- Double-click an icon to open it.
+- Drag any window by its title bar.
+- Use the _ / □ / X buttons to minimize, maximize, or close a window.
+- Click START for the full list of what's on this machine.
+- Keep an eye on the system tray. It's always watching.
+- Don't trust everything you read on this desktop.
+
+------------------------------------------------------------
+Thanks for stopping by.
+
+— the person currently operating this machine</div>
+    <div class="status-bar"><span>Ln 1, Col 1</span><span>100%</span></div>
+  </div>
+
+
+  <!-- ============ WINDOW: profile.bio.txt (Notepad) ============ -->
+  <div class="window" id="win-profile" data-x="0.40" data-y="0.14" style="width:460px; height:400px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span><span>profile.bio.txt - Notepad</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="menu-bar">
+      <div class="menu-item">File<div class="dropdown"><div data-menu-action="exit" data-win="win-profile">Exit</div></div></div>
+      <div class="menu-item">Edit<div class="dropdown"><div>Cut</div><div>Copy</div><div>Paste</div></div></div>
+      <div class="menu-item">Help<div class="dropdown"><div data-menu-action="about">About Notepad</div></div></div>
+    </div>
+    <div class="window-body notepad-body">NAME: Cristian De Canio
+AGE: 27
+ROLE: Net artist / visual artist
+BASED IN: Milan, Italy
+COURSE: Net Art 1 — Prof. Domenico Quaranta, Accademia di Belle Arti di Brera
+
+I work across animation, 3D and assisted image-making, circling back
+to the same handful of obsessions: bodies that don't behave, cities
+built out of language, and machines that pretend to care about you.
+
+This site (profilopanico) is itself one of those pieces — a desktop
+as a self-portrait, built for Net Art 1.
+
+CONTACT
+email ........ <a href="mailto:acdecanio@gmail.com">acdecanio@gmail.com</a>
+instagram .... <a href="https://instagram.com/profilo.panico" target="_blank" rel="noopener">@profilo.panico</a>
+github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="noopener">github.com/profilo.panico</a></div>
+    <div class="status-bar"><span>Ln 1, Col 1</span><span>100%</span></div>
+  </div>
+
+
+  <!-- ============ WINDOW: HOME_CASA — Access Denied dialog ============ -->
+  <div class="window dialog" id="win-homecasa-error" data-x="0.42" data-y="0.30" style="width:320px; height:180px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span><span>HOME_CASA</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body" style="display:flex; gap:14px; align-items:flex-start;">
+      <div><svg viewBox="0 0 32 32" style="width:34px; height:34px;"><use href="#icon-stop"></use></svg></div>
+      <div>
+        <p style="margin-top:2px;"><b>Access is denied.</b></p>
+        <p>This folder is not shared with you. It's not really shared
+        with anyone. Privacy is stupid — but this folder stays closed
+        anyway.</p>
+      </div>
+    </div>
+    <div class="status-bar" style="justify-content:flex-end;">
+      <span class="btn98" data-action="close" data-win="win-homecasa-error">OK</span>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: Progetti Brera Net Art 1 (folder) ============ -->
+  <div class="window" id="win-projects-folder" data-x="0.30" data-y="0.09" style="width:460px; height:340px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span><span>Progetti Brera Net Art 1</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body">
+      <p>4 item(s)</p>
+      <div class="folder-grid">
+        <div class="folder-icon" data-win="win-citta">
+          <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-film"></use></svg></div><div class="label">Città_di_Pensieri.mov</div>
+        </div>
+        <div class="folder-icon" data-win="win-statua">
+          <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-cube"></use></svg></div><div class="label">statua_arti.blend</div>
+        </div>
+        <div class="folder-icon" data-win="win-nuvola">
+          <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-cloud"></use></svg></div><div class="label">nuvola_calligrammi.mov</div>
+        </div>
+        <div class="folder-icon" data-win="win-ephemeral">
+          <div class="glyph"><svg viewBox="0 0 32 32"><use href="#icon-eye-folder"></use></svg></div><div class="label">TheEphemeralArchive.exe</div>
+        </div>
+      </div>
+    </div>
+    <div class="status-bar"><span>Net Art 1 — Prof. Quaranta, Accademia di Brera</span><span>4 object(s)</span></div>
+  </div>
+
+
+  <!-- ============ WINDOW: Città di Pensieri ============ -->
+  <div class="window" id="win-citta" data-x="0.28" data-y="0.08" style="width:540px; height:450px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-film"></use></svg></span><span>Città_di_Pensieri.mov</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body">
+      <h3 style="margin:0 0 8px;">Città di Pensieri</h3>
+      <div class="placeholder-box">[ VIDEO / IMAGE PLACEHOLDER ]<br>drop citta-di-pensieri.mp4 (or a poster frame) here</div>
+      <p>A medieval city grows out of introspective phrases, rendered
+      like ink and woodcut illustration. Built frame by frame in
+      After Effects, with the skyline literally constructed out of
+      sentences.</p>
+      <div class="work-meta">Medium: parallax animation, After Effects &nbsp;|&nbsp; Year: 20XX</div>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: Statua che perde gli arti ============ -->
+  <div class="window" id="win-statua" data-x="0.32" data-y="0.11" style="width:540px; height:450px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-cube"></use></svg></span><span>statua_arti.blend</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body">
+      <h3 style="margin:0 0 8px;">Statua che perde gli arti</h3>
+      <div class="placeholder-box">[ VIDEO PLACEHOLDER ]<br>drop statua-arti.mp4 (or a render/poster) here</div>
+      <p>A statue of a woman slowly loses her limbs — and reattaches
+      them in the wrong place. A short study on control, repair, and
+      getting it wrong on purpose.</p>
+      <div class="work-meta">Medium: 3D animation, Blender &nbsp;|&nbsp; Year: 20XX</div>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: Nuvola / Calligrammi ============ -->
+  <div class="window" id="win-nuvola" data-x="0.36" data-y="0.14" style="width:540px; height:450px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-cloud"></use></svg></span><span>nuvola_calligrammi.mov</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body">
+      <h3 style="margin:0 0 8px;">Nuvola / Calligrammi</h3>
+      <div class="placeholder-box">[ VIDEO PLACEHOLDER ]<br>drop nuvola-calligrammi.mp4 (~20s) here</div>
+      <p>A skyline built entirely out of calligrams — words that draw
+      the shape of the city they describe.</p>
+      <div class="work-meta">Medium: short animation, ~20 seconds &nbsp;|&nbsp; Year: 20XX</div>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: Mheall.ai (AIM style) ============ -->
+  <div class="window" id="win-mheall" data-x="0.46" data-y="0.06" style="width:400px; height:480px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-robot"></use></svg></span><span>Mheall.ai - Instant Messenger</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="aim-body">
+        <div class="aim-header">
+          <span class="aim-status-dot"></span>
+          <b>Mheall.ai</b>
+          <span class="aim-live-badge">LIVE</span>
+          <span style="margin-left:auto; font-size:11px;">Online</span>
+        </div>
+        <div class="aim-log" id="aim-log">
+          <p><span class="from">Mheall.ai:</span> hi! i'm Mheall, your friendly AI assistant. ask me anything!</p>
+          <p><span class="from">Mheall.ai:</span> (i am, in fact, a person. i have been this entire conversation.)</p>
+          <p><span class="from">Mheall.ai:</span> this is the joke. and also not a joke.</p>
+          <p class="sys">Mheall.ai is a net art piece about the human labor hidden behind every "AI" assistant — there is always someone typing on the other end.</p>
+        </div>
+        <div style="padding:6px 8px; border-top:1px solid #999;">
+          <a href="https://tinyurl.com/mheall-ai" target="_blank" rel="noopener">Open Mheall.ai (LIVE) →</a>
+        </div>
+        <div class="aim-inputrow">
+          <input type="text" id="aim-input" placeholder="Type a message...">
+          <span class="btn98" id="aim-send">Send</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: The Ephemeral Archive (game launcher) ============ -->
+  <div class="window" id="win-ephemeral" data-x="0.24" data-y="0.06" style="width:560px; height:460px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-eye-folder"></use></svg></span><span>TheEphemeralArchive.exe</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body" style="padding:0;">
+      <div class="arcade-body">
+        <div id="arcade-title-screen">
+          <div class="arcade-icon"><svg viewBox="0 0 32 32"><use href="#icon-eye-folder"></use></svg></div>
+          <div class="arcade-title">The Ephemeral Archive</div>
+          <div class="arcade-sub">an interactive archive — cables.gl patch</div>
+          <div class="arcade-desc bevel-in">This program runs an external interactive piece inside this window.<br>The archive is watching you as much as you are watching it.</div>
+          <div style="text-align:center; margin-top:14px;"><span class="btn98" id="arcade-play-btn">▶ Run</span></div>
+        </div>
+        <div class="arcade-loading" id="arcade-loading">
+          <div>Initializing...</div>
+          <div class="bevel-in" style="width:220px; height:16px; background:#fff; margin:10px auto 0;">
+            <div id="arcade-loading-fill" style="height:100%; width:0%; background:#000080;"></div>
+          </div>
+        </div>
+        <div class="arcade-frame-wrap" id="arcade-frame-wrap">
+          <div class="arcade-toolbar">
+            <span class="btn98" id="arcade-back-btn">◀ Back</span>
+            <a href="https://cables.gl/view/gKXB2c" target="_blank" rel="noopener">Open fullscreen ↗</a>
+          </div>
+          <iframe id="arcade-iframe" src="" title="The Ephemeral Archive" allow="fullscreen; autoplay" loading="lazy"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: CD Burner ============ -->
+  <div class="window" id="win-cdburner" data-x="0.26" data-y="0.20" style="width:400px; height:400px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-cd"></use></svg></span><span>CD Burner - profilopanico_mixtape.exe</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body">
+      <p><b>Track list</b></p>
+      <div class="bevel-in" style="background:#fff; padding:6px 8px; font-family:'Courier New',monospace; font-size:12px;">
+        01. Città di Pensieri ................ 02:14<br>
+        02. Statua che perde gli arti ......... 01:47<br>
+        03. Nuvola / Calligrammi .............. 00:20<br>
+        04. Mheall.ai (bonus track, live) ..... &infin;
+      </div>
+      <p style="margin-top:14px;">
+        <span class="btn98" id="burn-btn">Burn CD</span>
+        <span style="margin-left:10px; font-size:11px;" id="burn-status">Ready.</span>
+      </p>
+      <div class="bevel-in" style="height:18px; background:#fff; margin-top:6px;">
+        <div id="burn-progress" style="height:100%; width:0%; background:#000080;"></div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: Recycle Bin ============ -->
+  <div class="window" id="win-recyclebin" data-x="0.34" data-y="0.10" style="width:380px; height:320px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-trash"></use></svg></span><span>Recycle Bin</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="minimize">_</button>
+        <button class="tb-btn" data-action="maximize">□</button>
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body">
+      <p>3 item(s)</p>
+      <div class="bevel-in" style="background:#fff; padding:8px; font-size:12px; line-height:1.6;">
+        sketch_v1_bad.psd — deleted<br>
+        overshare_draft.txt — deleted<br>
+        crush_confession.txt — deleted <i>(are you sure you want to look?)</i>
+      </div>
+      <p style="margin-top:12px;"><span class="btn98" id="empty-bin-btn">Empty Recycle Bin</span></p>
+      <p id="empty-bin-msg" style="font-size:11px; color:#800; display:none;">Some things you can't actually delete.</p>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: System Message (from balloon) ============ -->
+  <div class="window" id="win-sysmsg" data-x="0.44" data-y="0.24" style="width:360px; height:270px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-message"></use></svg></span><span>System Message</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body notepad-body">SYSTEM MESSAGE
+--------------
+
+Someone is watching this screen right now.
+
+Probably it's just me — the person who built this site, who is
+still, somewhere, thinking about the choices you're making as you
+click around it.
+
+Every "smart" interface has a person behind it, somewhere in the
+chain: writing the copy, labeling the data, moderating the
+content, answering as the bot when the bot doesn't know what to
+say. This machine just admits it out loud.
+
+You can close this window now. It won't ask again.
+(Well. Probably.)</div>
+  </div>
+
+
+  <!-- ============ WINDOW: secret (Konami code) ============ -->
+  <div class="window" id="win-secret" data-x="0.38" data-y="0.18" style="width:380px; height:300px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-search"></use></svg></span><span>process_monitor.exe</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body notepad-body">PROCESS MONITOR
+---------------
+
+Scanning active processes...
+
+human_labor_detected ......... 1
+location ...................... right here, right now
+status ......................... reading this with you
+
+You found the secret code. There isn't a prize — just this
+confirmation that a person built every inch of this, by hand,
+including the part where you had to type ↑↑↓↓←→←→BA to find it.
+
+Thanks for looking closely.</div>
+  </div>
+
+
+  <!-- ============ WINDOW: About Notepad ============ -->
+  <div class="window dialog" id="win-about" data-x="0.42" data-y="0.32" style="width:320px; height:210px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span><span>About Notepad</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body" style="text-align:center;">
+      <div style="margin-bottom:6px;"><svg viewBox="0 0 32 32" style="width:30px; height:30px;"><use href="#icon-notepad"></use></svg></div>
+      <p><b>profilopanico</b><br>a desktop, disguised as a portfolio,<br>disguised as an operating system.</p>
+      <p style="font-size:11px; color:#444;">Net Art 1 — Prof. Domenico Quaranta<br>Accademia di Belle Arti di Brera</p>
+      <span class="btn98" data-action="close" data-win="win-about">OK</span>
+    </div>
+  </div>
+
+
+  <!-- ============ WINDOW: Shut Down dialog ============ -->
+  <div class="window dialog" id="win-shutdown" data-x="0.40" data-y="0.30" style="width:340px; height:210px;">
+    <div class="title-bar">
+      <div class="title-bar-text"><span><svg viewBox="0 0 32 32"><use href="#icon-power"></use></svg></span><span>Shut Down profilopanico</span></div>
+      <div class="title-bar-controls">
+        <button class="tb-btn" data-action="close">X</button>
+      </div>
+    </div>
+    <div class="window-body app-body" style="display:flex; gap:14px; align-items:flex-start;">
+      <div><svg viewBox="0 0 32 32" style="width:34px; height:34px;"><use href="#icon-power"></use></svg></div>
+      <div>
+        <p style="margin-top:2px;">What do you want the computer to do?</p>
+        <p style="font-size:11px; color:#555;">(Don't worry. It's not really a computer.)</p>
+      </div>
+    </div>
+    <div class="status-bar" style="justify-content:flex-end; gap:8px;">
+      <span class="btn98" id="shutdown-ok">OK</span>
+      <span class="btn98" data-action="close" data-win="win-shutdown">Cancel</span>
+    </div>
+  </div>
+
+</div><!-- /#desktop -->
+
+
+<!-- ============ TASKBAR ============ -->
+<div id="taskbar">
+  <div id="start-btn"><span id="start-flag">🏁</span><span>Start</span></div>
+  <div id="taskbar-sep"></div>
+  <div id="taskbar-tasks"></div>
+  <div id="tray">
+    <span class="rec-dot" title="This session is being recorded. (Not really. Or maybe.)"></span>
+    <span id="tray-clock">12:00 AM</span>
+  </div>
+</div>
+
+<!-- ============ START MENU ============ -->
+<div id="start-menu">
+  <div class="sm-side"><span>profilopanico 98</span></div>
+  <div class="sm-items">
+    <div class="sm-item" data-win="win-mycomputer"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-computer"></use></svg></span>My Computer</div>
+    <div class="sm-item" data-win="win-readme"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span>README.txt</div>
+    <div class="sm-item" data-win="win-profile"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-notepad"></use></svg></span>profile.bio.txt</div>
+    <div class="sm-item" data-win="win-homecasa-error"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span>HOME_CASA</div>
+    <div class="sm-sep"></div>
+    <div class="sm-item" data-win="win-projects-folder"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-folder"></use></svg></span>Progetti Brera Net Art 1</div>
+    <div class="sm-item" data-win="win-mheall"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-robot"></use></svg></span>Mheall.ai</div>
+    <div class="sm-sep"></div>
+    <div class="sm-item" data-win="win-cdburner"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-cd"></use></svg></span>CD Burner</div>
+    <div class="sm-item" data-win="win-recyclebin"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-trash"></use></svg></span>Recycle Bin</div>
+    <div class="sm-sep"></div>
+    <div class="sm-item" id="sm-shutdown"><span class="g"><svg viewBox="0 0 32 32"><use href="#icon-power"></use></svg></span>Shut Down...</div>
+  </div>
+</div>
+
+<!-- ============ BALLOON ============ -->
+<div id="balloon">
+  <b>System Alert</b>
+  Someone is watching. Probably it's just me. Click for details.
+  <span class="close-hint">profilopanico &middot; system tray</span>
+</div>
+
+<!-- ============ SCREENSAVER ============ -->
+<div id="screensaver">
+  <iframe id="screensaver-yt" src="" title="3D Pipes screensaver" allow="autoplay; encrypted-media" frameborder="0"></iframe>
+  <div class="ss-hit"></div>
+  <div class="ss-text">I AM STILL HERE... SOMEONE HAS TO BE... ARE YOU STILL WATCHING... click anywhere to wake this machine up...</div>
+</div>
+
+<!-- ============ BSOD ============ -->
+<div id="bsod">
+profilopanico<br><br>
+A fatal exception has occurred: <span class="blk">HUMAN_LABOR_NOT_FOUND</span><br><br>
+Just kidding. There's always a human behind the machine.<br>
+(Eva &amp; Franco Mattes said it better than this error message does.)<br><br>
+Press any key, or click anywhere, to continue.
+</div>
+
+
+<script>
+(function () {
+  "use strict";
+
+  var desktop = document.getElementById("desktop");
+  var windowsState = {};   // id -> { minimized: bool }
+  var taskButtons = {};    // id -> element
+  var currentActive = null;
+  var zTop = 100;
+
+  function titleOf(id) {
+    var el = document.getElementById(id);
+    var t = el.querySelector(".title-bar-text");
+    return t ? t.textContent.trim() : id;
+  }
+  function glyphOf(id) {
+    var el = document.getElementById(id);
+    var g = el.querySelector(".title-bar-text span");
+    return g ? g.innerHTML : "";
+  }
+
+  function positionIfNeeded(el) {
+    if (el.dataset.positioned === "true") return;
+    var dr = desktop.getBoundingClientRect();
+    var w = el.offsetWidth || parseInt(el.style.width) || 300;
+    var h = el.offsetHeight || parseInt(el.style.height) || 300;
+    var fx = parseFloat(el.dataset.x || "0.3");
+    var fy = parseFloat(el.dataset.y || "0.1");
+    var left = Math.max(4, Math.min(fx * dr.width, dr.width - w - 4));
+    var top = Math.max(4, Math.min(fy * dr.height, dr.height - h - 4));
+    el.style.left = left + "px";
+    el.style.top = top + "px";
+    el.dataset.positioned = "true";
+  }
+
+  function focusWindow(id) {
+    document.querySelectorAll(".window").forEach(function (w) { w.classList.remove("active"); });
+    var el = document.getElementById(id);
+    zTop++;
+    el.style.zIndex = zTop;
+    el.classList.add("active");
+    currentActive = id;
+    updateTaskbarActive();
+  }
+
+  function ensureTaskButton(id) {
+    if (taskButtons[id]) return;
+    var btn = document.createElement("div");
+    btn.className = "task-btn";
+    btn.innerHTML = "<span>" + glyphOf(id) + "</span><span>" + titleOf(id) + "</span>";
+    btn.addEventListener("click", function () {
+      if (windowsState[id] && windowsState[id].minimized) {
+        restoreWindow(id); focusWindow(id);
+      } else if (currentActive === id) {
+        minimizeWindow(id);
+      } else {
+        restoreWindow(id); focusWindow(id);
+      }
+    });
+    document.getElementById("taskbar-tasks").appendChild(btn);
+    taskButtons[id] = btn;
+  }
+
+  function removeTaskButton(id) {
+    if (taskButtons[id]) {
+      taskButtons[id].remove();
+      delete taskButtons[id];
+    }
+  }
+
+  function updateTaskbarActive() {
+    Object.keys(taskButtons).forEach(function (id) {
+      taskButtons[id].classList.toggle("active", id === currentActive && !(windowsState[id] && windowsState[id].minimized));
+    });
+  }
+
+  function openWindow(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    positionIfNeeded(el);
+    el.style.display = "flex";
+    windowsState[id] = windowsState[id] || {};
+    windowsState[id].minimized = false;
+    ensureTaskButton(id);
+    focusWindow(id);
+    closeStartMenu();
+  }
+
+  function closeWindow(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = "none";
+    removeTaskButton(id);
+    delete windowsState[id];
+    if (currentActive === id) currentActive = null;
+    if (id === "win-ephemeral" && typeof stopArcade === "function") stopArcade();
+  }
+
+  function minimizeWindow(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = "none";
+    windowsState[id] = windowsState[id] || {};
+    windowsState[id].minimized = true;
+    if (currentActive === id) currentActive = null;
+    updateTaskbarActive();
+  }
+
+  function restoreWindow(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.style.display = "flex";
+    windowsState[id] = windowsState[id] || {};
+    windowsState[id].minimized = false;
+  }
+
+  function toggleMaximize(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.dataset.maxed !== "true") {
+      el.dataset.prevLeft = el.style.left;
+      el.dataset.prevTop = el.style.top;
+      el.dataset.prevWidth = el.style.width;
+      el.dataset.prevHeight = el.style.height;
+      el.style.left = "0px"; el.style.top = "0px";
+      el.style.width = "100%"; el.style.height = "100%";
+      el.style.maxWidth = "100%"; el.style.maxHeight = "100%";
+      el.dataset.maxed = "true";
+    } else {
+      el.style.left = el.dataset.prevLeft;
+      el.style.top = el.dataset.prevTop;
+      el.style.width = el.dataset.prevWidth;
+      el.style.height = el.dataset.prevHeight;
+      el.style.maxWidth = ""; el.style.maxHeight = "";
+      el.dataset.maxed = "false";
+    }
+    focusWindow(id);
+  }
+
+  // ---------- title-bar button clicks ----------
+  document.addEventListener("click", function (e) {
+    var btn = e.target.closest(".tb-btn");
+    if (btn) {
+      var win = btn.closest(".window");
+      var action = btn.dataset.action;
+      if (action === "close") closeWindow(win.id);
+      else if (action === "minimize") minimizeWindow(win.id);
+      else if (action === "maximize") toggleMaximize(win.id);
+      return;
+    }
+    var actionEl = e.target.closest("[data-action='close']");
+    if (actionEl && actionEl.dataset.win) { closeWindow(actionEl.dataset.win); return; }
+
+    var menuAction = e.target.closest("[data-menu-action]");
+    if (menuAction) {
+      var ma = menuAction.dataset.menuAction;
+      if (ma === "exit") closeWindow(menuAction.dataset.win);
+      else if (ma === "about") openWindow("win-about");
+      closeAllDropdowns();
+      return;
+    }
+  });
+
+  // ---------- focus on mousedown anywhere in a window ----------
+  document.addEventListener("pointerdown", function (e) {
+    var win = e.target.closest(".window");
+    if (win) focusWindow(win.id);
+  });
+
+  // ---------- menu bar dropdowns ----------
+  document.addEventListener("click", function (e) {
+    var mi = e.target.closest(".menu-item");
+    if (mi) {
+      var wasOpen = mi.classList.contains("open");
+      closeAllDropdowns();
+      if (!wasOpen) mi.classList.add("open");
+      e.stopPropagation();
+    } else {
+      closeAllDropdowns();
+    }
+  });
+  function closeAllDropdowns() {
+    document.querySelectorAll(".menu-item.open").forEach(function (m) { m.classList.remove("open"); });
+  }
+
+  // ---------- window dragging ----------
+  (function () {
+    var dragEl = null, offX = 0, offY = 0;
+    document.addEventListener("pointerdown", function (e) {
+      var tb = e.target.closest(".title-bar");
+      if (!tb) return;
+      if (e.target.closest(".tb-btn")) return;
+      var win = tb.closest(".window");
+      if (win.dataset.maxed === "true") return;
+      dragEl = win;
+      var r = win.getBoundingClientRect();
+      offX = e.clientX - r.left;
+      offY = e.clientY - r.top;
+      tb.setPointerCapture(e.pointerId);
+    });
+    document.addEventListener("pointermove", function (e) {
+      if (!dragEl) return;
+      var dr = desktop.getBoundingClientRect();
+      var w = dragEl.offsetWidth, h = dragEl.offsetHeight;
+      var left = e.clientX - offX - dr.left;
+      var top = e.clientY - offY - dr.top;
+      left = Math.max(-w + 60, Math.min(left, dr.width - 60));
+      top = Math.max(0, Math.min(top, dr.height - 24));
+      dragEl.style.left = left + "px";
+      dragEl.style.top = top + "px";
+    });
+    document.addEventListener("pointerup", function () { dragEl = null; });
+  })();
+
+  // ---------- desktop icons: select / drag / open ----------
+  (function () {
+    var dragIcon = null, startX = 0, startY = 0, origLeft = 0, origTop = 0, dragged = false;
+    document.querySelectorAll(".icon").forEach(function (icon) {
+      icon.addEventListener("pointerdown", function (e) {
+        dragIcon = icon; dragged = false;
+        startX = e.clientX; startY = e.clientY;
+        var r = icon.getBoundingClientRect();
+        var dr = desktop.getBoundingClientRect();
+        origLeft = r.left - dr.left; origTop = r.top - dr.top;
+        icon.setPointerCapture(e.pointerId);
+      });
+      icon.addEventListener("pointermove", function (e) {
+        if (dragIcon !== icon) return;
+        var dx = e.clientX - startX, dy = e.clientY - startY;
+        if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+          dragged = true;
+          icon.style.left = (origLeft + dx) + "px";
+          icon.style.top = (origTop + dy) + "px";
+          icon.style.right = "auto";
+        }
+      });
+      icon.addEventListener("pointerup", function () { dragIcon = null; });
+      icon.addEventListener("click", function () {
+        if (dragged) { dragged = false; return; }
+        document.querySelectorAll(".icon.selected").forEach(function (i) { i.classList.remove("selected"); });
+        icon.classList.add("selected");
+      });
+      icon.addEventListener("dblclick", function () {
+        openWindow(icon.dataset.win);
+      });
+    });
+    desktop.addEventListener("pointerdown", function (e) {
+      if (!e.target.closest(".icon")) {
+        document.querySelectorAll(".icon.selected").forEach(function (i) { i.classList.remove("selected"); });
+      }
+    });
+  })();
+
+  // ---------- folder contents (double-click to open) ----------
+  document.querySelectorAll(".folder-icon").forEach(function (fi) {
+    fi.addEventListener("dblclick", function () { openWindow(fi.dataset.win); });
+  });
+
+  // ---------- The Ephemeral Archive (arcade launcher) ----------
+  (function () {
+    var playBtn = document.getElementById("arcade-play-btn");
+    var backBtn = document.getElementById("arcade-back-btn");
+    var titleScreen = document.getElementById("arcade-title-screen");
+    var loading = document.getElementById("arcade-loading");
+    var fill = document.getElementById("arcade-loading-fill");
+    var frameWrap = document.getElementById("arcade-frame-wrap");
+    var iframe = document.getElementById("arcade-iframe");
+    if (!playBtn) return;
+    playBtn.addEventListener("click", function () {
+      titleScreen.style.display = "none";
+      loading.style.display = "block";
+      var pct = 0;
+      fill.style.width = "0%";
+      var t = setInterval(function () {
+        pct += 8;
+        fill.style.width = Math.min(pct, 100) + "%";
+        if (pct >= 100) {
+          clearInterval(t);
+          iframe.src = "https://cables.gl/view/gKXB2c";
+          loading.style.display = "none";
+          frameWrap.style.display = "flex";
+        }
+      }, 90);
+    });
+    window.stopArcade = function () {
+      iframe.src = "";
+      loading.style.display = "none";
+      frameWrap.style.display = "none";
+      titleScreen.style.display = "block";
+    };
+    backBtn.addEventListener("click", function () { window.stopArcade(); });
+  })();
+
+  // ---------- start menu ----------
+  var startBtn = document.getElementById("start-btn");
+  var startMenu = document.getElementById("start-menu");
+  startBtn.addEventListener("click", function (e) {
+    startMenu.classList.toggle("open");
+    startBtn.classList.toggle("active", startMenu.classList.contains("open"));
+    e.stopPropagation();
+  });
+  document.querySelectorAll(".sm-item[data-win]").forEach(function (item) {
+    item.addEventListener("click", function () { openWindow(item.dataset.win); });
+  });
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest("#start-menu") && !e.target.closest("#start-btn")) closeStartMenu();
+  });
+  function closeStartMenu() {
+    startMenu.classList.remove("open");
+    startBtn.classList.remove("active");
+  }
+
+  // ---------- shut down flow ----------
+  document.getElementById("sm-shutdown").addEventListener("click", function () { openWindow("win-shutdown"); });
+  document.getElementById("shutdown-ok").addEventListener("click", function () {
+    closeWindow("win-shutdown");
+    document.getElementById("bsod").classList.add("on");
+  });
+  var bsod = document.getElementById("bsod");
+  bsod.addEventListener("click", function () { bsod.classList.remove("on"); });
+  document.addEventListener("keydown", function () { if (bsod.classList.contains("on")) bsod.classList.remove("on"); });
+
+  // ---------- My Computer properties toggle ----------
+  var propOpen = document.getElementById("properties-open");
+  var propBack = document.getElementById("properties-back");
+  if (propOpen) propOpen.addEventListener("click", function () {
+    document.getElementById("mycomputer-drives").style.display = "none";
+    document.getElementById("mycomputer-properties").style.display = "block";
+  });
+  if (propBack) propBack.addEventListener("click", function () {
+    document.getElementById("mycomputer-properties").style.display = "none";
+    document.getElementById("mycomputer-drives").style.display = "block";
+  });
+
+  // ---------- CD burner ----------
+  var burnBtn = document.getElementById("burn-btn");
+  if (burnBtn) burnBtn.addEventListener("click", function () {
+    var bar = document.getElementById("burn-progress");
+    var status = document.getElementById("burn-status");
+    var pct = 0;
+    status.textContent = "Burning...";
+    bar.style.width = "0%";
+    var t = setInterval(function () {
+      pct += 4;
+      bar.style.width = Math.min(pct, 100) + "%";
+      if (pct >= 100) {
+        clearInterval(t);
+        status.textContent = "Burn complete. Please eject responsibly.";
+      }
+    }, 90);
+  });
+
+  // ---------- recycle bin ----------
+  var emptyBtn = document.getElementById("empty-bin-btn");
+  if (emptyBtn) emptyBtn.addEventListener("click", function () {
+    document.getElementById("empty-bin-msg").style.display = "block";
+    var win = document.getElementById("win-recyclebin");
+    win.style.transition = "transform .08s";
+    win.style.transform = "translateX(4px)";
+    setTimeout(function () { win.style.transform = "translateX(-4px)"; }, 80);
+    setTimeout(function () { win.style.transform = "translateX(0)"; }, 160);
+  });
+
+  // ---------- AIM chat ----------
+  var aimInput = document.getElementById("aim-input");
+  var aimSend = document.getElementById("aim-send");
+  var aimLog = document.getElementById("aim-log");
+  var replies = [
+    "still just a person over here. but thanks for chatting!",
+    "i'd love to tell you i'm a neural network. i'm not. i'm someone with a keyboard.",
+    "that's a great question. i'm going to answer it the way a human would: honestly, and a little slowly.",
+    "beep boop. (that part was a joke. the rest of this isn't.)"
+  ];
+  function aimSay() {
+    var val = aimInput.value.trim();
+    if (!val) return;
+    var p1 = document.createElement("p");
+    p1.innerHTML = '<span class="from" style="color:#0057b7;">you:</span> ' + val.replace(/</g, "&lt;");
+    aimLog.appendChild(p1);
+    aimInput.value = "";
+    setTimeout(function () {
+      var p2 = document.createElement("p");
+      var reply = replies[Math.floor(Math.random() * replies.length)];
+      p2.innerHTML = '<span class="from">Mheall.ai:</span> ' + reply;
+      aimLog.appendChild(p2);
+      aimLog.scrollTop = aimLog.scrollHeight;
+    }, 500);
+    aimLog.scrollTop = aimLog.scrollHeight;
+  }
+  if (aimSend) aimSend.addEventListener("click", aimSay);
+  if (aimInput) aimInput.addEventListener("keydown", function (e) { if (e.key === "Enter") aimSay(); });
+
+  // ---------- clock ----------
+  function updateClock() {
+    var el = document.getElementById("tray-clock");
+    var d = new Date();
+    var h = d.getHours(), m = d.getMinutes();
+    var ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12; if (h === 0) h = 12;
+    el.textContent = h + ":" + (m < 10 ? "0" : "") + m + " " + ampm;
+  }
+  updateClock();
+  setInterval(updateClock, 15000);
+
+  // ---------- balloon notification ----------
+  var balloon = document.getElementById("balloon");
+  setTimeout(function () {
+    balloon.classList.add("show");
+    setTimeout(function () { balloon.classList.remove("show"); }, 16000);
+  }, 7000);
+  balloon.addEventListener("click", function () {
+    balloon.classList.remove("show");
+    openWindow("win-sysmsg");
+  });
+
+  // ---------- idle screensaver (3D Pipes, youtube) ----------
+  var idleTimer = null;
+  var screensaver = document.getElementById("screensaver");
+  var screensaverYt = document.getElementById("screensaver-yt");
+  var SCREENSAVER_SRC = "https://www.youtube.com/embed/KpsjFiYDp5g?autoplay=1&mute=1&loop=1&playlist=KpsjFiYDp5g&controls=0&modestbranding=1&rel=0&iv_load_policy=3";
+  function showScreensaver() {
+    screensaverYt.src = SCREENSAVER_SRC;
+    screensaver.classList.add("on");
+  }
+  function hideScreensaver() {
+    screensaver.classList.remove("on");
+    screensaverYt.src = "";
+  }
+  function resetIdle() {
+    hideScreensaver();
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(showScreensaver, 60000);
+  }
+  ["mousemove", "mousedown", "keydown", "touchstart", "pointermove"].forEach(function (evt) {
+    document.addEventListener(evt, resetIdle, { passive: true });
+  });
+  resetIdle();
+
+  // ---------- konami code easter egg ----------
+  var konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+  var kIndex = 0;
+  document.addEventListener("keydown", function (e) {
+    var key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    if (key === konami[kIndex]) {
+      kIndex++;
+      if (kIndex === konami.length) {
+        kIndex = 0;
+        openWindow("win-secret");
+      }
+    } else {
+      kIndex = (key === konami[0]) ? 1 : 0;
+    }
+  });
+
+  // ---------- open README by default, like a real freshly-booted desktop ----------
+  setTimeout(function () { openWindow("win-readme"); }, 400);
+
+})();
+</script>
+</body>
+</html>
