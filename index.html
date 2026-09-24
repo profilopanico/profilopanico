@@ -226,6 +226,24 @@
   a { color: #0000ee; }
   a:visited { color: #551a8b; }
 
+  /* ---------- mobile / touch ---------- */
+  #desktop.mobile-icons { display: flex; flex-wrap: wrap; align-content: flex-start; padding: 6px; gap: 0; }
+  #desktop.mobile-icons .icon { position: static !important; right: auto !important; }
+  @media (max-width: 700px), (pointer: coarse) {
+    .tb-btn { width: 30px; height: 26px; font-size: 14px; }
+    .title-bar { height: 30px; }
+    .title-bar-text svg { width: 18px; height: 18px; }
+    #start-btn { height: 34px; padding: 0 12px; }
+    #taskbar { height: 40px; }
+    #taskbar-tasks, .task-btn { height: 34px; }
+    .task-btn { max-width: 120px; }
+    #desktop { bottom: 40px; }
+    .btn98 { padding: 8px 16px; }
+    .sm-item { padding: 9px 10px; }
+    .icon .label { font-size: 12px; }
+    .window { max-width: 98vw; max-height: 82vh; }
+  }
+
   /* ---------- pixel noise overlay ---------- */
   #grain-overlay {
     position: fixed; inset: 0; z-index: 99999; pointer-events: none;
@@ -1048,6 +1066,11 @@ Press any key, or click anywhere, to continue.
   "use strict";
 
   var desktop = document.getElementById("desktop");
+  function updateMobileLayout() {
+    desktop.classList.toggle("mobile-icons", window.innerWidth <= 700);
+  }
+  updateMobileLayout();
+  window.addEventListener("resize", updateMobileLayout);
   var windowsState = {};   // id -> { minimized: bool }
   var taskButtons = {};    // id -> element
   var currentActive = null;
