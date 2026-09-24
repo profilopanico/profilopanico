@@ -133,7 +133,7 @@
     padding: 20px; font-size: 12px; margin-bottom: 10px; min-height: 160px;
   }
   .work-meta { font-size: 11px; color: #444; border-top: 1px solid #ccc; margin-top: 8px; padding-top: 6px; }
-  .folder-grid { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 4px; }
+  .folder-grid { position: relative; min-height: 120px; padding: 8px 4px; }
   .folder-icon { position: relative; display: flex; flex-direction: column; align-items: center; width: 100px; text-align: center; padding: 8px 4px; cursor: grab; touch-action: none; }
   .folder-icon:active { cursor: grabbing; }
   .folder-icon .glyph { font-size: 32px; line-height: 1; filter: drop-shadow(1px 1px 1px rgba(0,0,0,.35)); }
@@ -841,10 +841,10 @@ github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="
     <div class="window-body app-body">
       <p>2 item(s)</p>
       <div class="folder-grid">
-        <div class="folder-icon" data-win="win-exercise-modivedere">
+        <div class="folder-icon" data-win="win-exercise-modivedere" style="left:4px; top:8px;">
           <div class="glyph"><img class="win98-icon" src="media/windows98-icons/folder.png" alt=""></div><div class="label">2. Modi di vedere</div>
         </div>
-        <div class="folder-icon" data-win="win-exercise-gif">
+        <div class="folder-icon" data-win="win-exercise-gif" style="left:108px; top:8px;">
           <div class="glyph"><img class="win98-icon" src="media/windows98-icons/folder.png" alt=""></div><div class="label">3. Graphics Interchange Format</div>
         </div>
       </div>
@@ -876,10 +876,10 @@ github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="
     <div class="window-body app-body">
       <p>2 item(s)</p>
       <div class="folder-grid">
-        <div class="folder-icon" data-win="win-patchnotes">
+        <div class="folder-icon" data-win="win-patchnotes" style="left:4px; top:8px;">
           <div class="glyph"><img class="win98-icon" src="media/windows98-icons/wordpad.png" alt=""></div><div class="label">README.txt</div>
         </div>
-        <div class="folder-icon" data-win="win-mheall">
+        <div class="folder-icon" data-win="win-mheall" style="left:108px; top:8px;">
           <div class="glyph"><img class="win98-icon" src="media/windows98-icons/msn3-3.png" alt=""></div><div class="label">Mheall.ai.exe</div>
         </div>
       </div>
@@ -1030,7 +1030,7 @@ github ....... <a href="https://github.com/profilo.panico" target="_blank" rel="
     <div class="window-body app-body">
       <p>1 item(s)</p>
       <div class="folder-grid">
-        <div class="folder-icon" data-win="win-statuaar-error">
+        <div class="folder-icon" data-win="win-statuaar-error" style="left:4px; top:8px;">
           <div class="glyph"><img class="win98-icon" src="media/windows98-icons/computer-explorer.png" alt=""></div><div class="label">StatuaAR.exe</div>
         </div>
       </div>
@@ -1751,11 +1751,15 @@ Press any key, or click anywhere, to continue.
       var dx = e.clientX - startX, dy = e.clientY - startY;
       if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
         dragFolder = true;
-        fi.style.left = (origLeft + dx) + "px";
-        fi.style.top = (origTop + dy) + "px";
+        var grid = fi.parentElement;
+        var maxLeft = Math.max(0, grid.clientWidth - fi.offsetWidth);
+        var maxTop = Math.max(0, grid.clientHeight - fi.offsetHeight);
+        fi.style.left = Math.max(-fi.offsetWidth + 24, Math.min(origLeft + dx, maxLeft)) + "px";
+        fi.style.top = Math.max(0, Math.min(origTop + dy, maxTop)) + "px";
       }
     });
     fi.addEventListener("pointerup", function () { fi.dataset.dragged = dragFolder ? "true" : "false"; });
+    fi.addEventListener("pointercancel", function () { fi.dataset.dragged = "false"; });
     fi.addEventListener("dblclick", function () {
       if (fi.dataset.dragged === "true") {
         fi.dataset.dragged = "false";
